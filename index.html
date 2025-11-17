@@ -3,43 +3,84 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="description"
-        content="Embodied Tree of Thoughts: Deliberate Robot Manipulation Planning with World Model">
-    <meta name="keywords" content="Robotic Manipulation, Planning, World Model">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Embodied Tree of Thoughts</title>
-    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
-    <link rel="stylesheet" href="./static/css/bulma.min.css">
-    <link rel="stylesheet" href="./static/css/index.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro">
+    <style>
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            margin: 0 auto;
+            max-width: 900px;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 0.3em;
+        }
+
+        .authors {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 1em;
+            white-space: pre-line;
+        }
+
+        .img-block {
+            width: 100%;
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .img-block img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+        }
+    </style>
 </head>
 
-<section class="hero">
-    <div class="hero-body">
-        <div class="container is-fullhd">
-            <div class="columns is-centered">
-                <div class="column has-text-centered">
-                    <h1 class="title is-1 publication-title">Embodied Tree of Thoughts: Deliberate Robot Manipulation
-                        Planning with World Model</h1>
+<body>
 
-                    <div class="publication-links">
-                        <span class="link-block">
-                            <a target="_blank" href="https://github.com/embodied-tree-of-thoughts/embodied-tree-of-thoughts.github.io"
-                                class="external-link button is-normal is-rounded is-dark">
-                                <span class="icon"><i class="fas fa-file-pdf"></i></span><span>ArXiv</span>
-                            </a>
-                        </span>
-                        <span class="link-block">
-                            <a target="_blank" href="https://github.com/embodied-tree-of-thoughts/embodied-tree-of-thoughts.github.io"
-                                class="external-link button is-normal is-rounded is-dark">
-                                <span class="icon"><i class="fab fa-github"></i></span><span>Code</span>
-                            </a>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <h1>Embodied Tree of Thoughts: Deliberate Robot Manipulation Planning with World Model</h1>
+
+    <div class="authors">
+        Wenjiang Xu<sup>1,5</sup>,
+        Jiayu Wang<sup>2</sup>,
+        Rui Fang<sup>2</sup>,
+        Mingkang Zhang<sup>2</sup>,
+        Lusong Li<sup>3</sup>,
+        Jiayuan Gu<sup>4</sup>,
+        Zecui Zeng<sup>3†</sup>,
+        Rui Chen<sup>2†</sup>
+    
+        <br><br>
+        <sup>1</sup> University of Chinese Academy of Sciences (UCAS)<br>
+        <sup>2</sup> Tsinghua University<br>
+        <sup>3</sup> JD Explore Academy<br>
+        <sup>4</sup> ShanghaiTech University<br>
+        <sup>5</sup> Nanjing University<br>
+    
+        <br>
+        https://embodied-tree-of-thoughts.github.io/
     </div>
-</section>
+
+
+    <div class="img-block">
+        <img src="static/teaser.png" alt="Embodied Tree of Thoughts: Deliberate Robot Manipulation Planning with World Model">
+    </div>
+    <div class="img-block">
+        <img src="static/etot.png" alt="Framework">
+    </div>
+    <div class="img-block">
+        <img src="static/task1.png" alt="Short-horizon Tasks">
+    </div>
+    <div class="img-block">
+        <img src="static/task2.png" alt="Long-horizon Tasks">
+    </div>
+
 </body>
 
 </html>
