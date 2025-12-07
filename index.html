@@ -85,72 +85,56 @@
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* --- tree demo layout --- */
+/* container for tree view - keep relative for absolute svg positioning */
         .tree-block {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 25px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 25px;
+        padding-bottom: 10px;
+        min-height: 320px; /* keep space for svg connectors */
         }
 
+        /* svg connector fills horizontal area between nodes */
+        .connector-svg {
+        position: absolute;
+        top: 80px;      /* place svg below root card - adjust if needed */
+        left: 0;
+        width: 100%;
+        height: 160px;  /* adjust to fit curves */
+        pointer-events: none; /* allow clicks through */
+        }
+
+        /* labels & cards same as before but narrower */
         .tree-row {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        gap: 80px;
+        margin-top: 20px;
         }
 
-        /* action label */
         .action-label {
-            text-align: center;
-            font-weight: 600;
-            margin-bottom: 5px;
-            font-size: 1.1em;
+        text-align: center;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 1.05em;
         }
 
-        /* video wrapped with colored border */
         .video-card {
-            border: 6px solid #4CAF50; /* default green */
-            border-radius: 15px;
-            overflow: hidden;
-            width: 260px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        border: 6px solid #4CAF50;
+        border-radius: 14px;
+        overflow: hidden;
+        width: 300px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        background: white;
         }
 
-        /* red border version */
-        .video-card.fail {
-            border-color: #E53935;
-        }
+        .video-card.fail { border-color: #E53935; }
 
-        /* connecting arrow */
-        .arrow-down {
-            width: 3px;
-            height: 40px;
-            background: black;
-            margin: 10px auto;
-        }
+        /* reduce video height to look nicer */
+        .video-card video { display:block; width:100%; height:170px; object-fit:cover; }
 
-        .arrow-branch {
-            display: flex;
-            justify-content: center;
-            gap: 200px;
-            width: 100%;
-        }
-
-        .arrow-line {
-            width: 120px;
-            height: 3px;
-            background: black;
-        }
-
-        .arrow-bend {
-            width: 40px;
-            height: 40px;
-            border: 3px solid black;
-            border-top: none;
-            border-right: none;
-            border-radius: 0 0 0 40px;
-        }
 
 
 
@@ -233,73 +217,86 @@
     
     <script>
         const sets = [
-            {
-                root_img:"static/pick.png",
-                root_action:"Pick up the apple",
-        
-                left_action:"Put into holder 1",
-                left_video:"static/holder1.mp4",
-                left_fail:true,
-        
-                right_action:"Put into holder 2",
-                right_video:"static/holder2.mp4",
-                right_fail:false,
-            }
+          {
+            root_action: "Pick up the apple",
+            root_video: "static/etot.png",      // 或静态图片也可
+            left_action: "Put into holder 1",
+            left_video: "static/teaser.mp4",
+            left_fail: true,
+            right_action: "Put into holder 2",
+            right_video: "static/teaser.mp4",
+            right_fail: false
+          },
+          // ... 其它任务项
         ];
         
-        function showSet(idx){
-            const s = sets[idx];
+        function showSet(idx) {
+          const s = sets[idx];
         
-            document.getElementById('demo-box').innerHTML = `
-            <div class="tree-block">
+          document.getElementById('demo-box').innerHTML = `
+          <div class="tree-block">
         
-                <!-- root node -->
-                <div class="action-label">${s.root_action}</div>
-                <div class="video-card">
-                    <video controls width="260">
-                        <source src="${s.root_img}" type="video/mp4">
-                    </video>
-                </div>
-        
-                <!-- arrow downward -->
-                <div class="arrow-down"></div>
-        
-                <!-- branch graphic -->
-                <div class="arrow-branch">
-                    <div class="arrow-bend"></div>
-                    <div class="arrow-bend" style="transform:scaleX(-1);"></div>
-                </div>
-        
-                <!-- two children -->
-                <div class="tree-row">
-        
-                    <!-- left child -->
-                    <div>
-                        <div class="action-label">${s.left_action}</div>
-                        <div class="video-card ${s.left_fail ? 'fail':''}">
-                            <video controls width="260">
-                                <source src="${s.left_video}" type="video/mp4">
-                            </video>
-                        </div>
-                    </div>
-        
-                    <!-- right child -->
-                    <div>
-                        <div class="action-label">${s.right_action}</div>
-                        <div class="video-card ${s.right_fail ? 'fail':''}">
-                            <video controls width="260">
-                                <source src="${s.right_video}" type="video/mp4">
-                            </video>
-                        </div>
-                    </div>
-        
-                </div>
+            <!-- ROOT -->
+            <div style="margin-top:6px; text-align:center;">
+              <div class="action-label" style="font-size:1.2em; margin-bottom:10px;">${s.root_action}</div>
+              <div class="video-card" style="width:360px;">
+                <video controls preload="metadata">
+                  <source src="${s.root_video}" type="video/mp4">
+                </video>
+              </div>
             </div>
-            `;
+        
+            <!-- SVG connectors (absolute positioned) -->
+            <svg class="connector-svg" viewBox="0 0 100 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L6,3 L0,6 z" fill="#000" />
+                </marker>
+              </defs>
+        
+              <!-- vertical short line from root down -->
+              <line x1="50" y1="12" x2="50" y2="20" stroke="#000" stroke-width="0.8"/>
+        
+              <!-- left bezier: from (50,20) to (30,48) with control points for smooth arc -->
+              <path d="M50 20 C44 30, 36 40, 30 48" stroke="#000" stroke-width="0.9" fill="none" marker-end="url(#arrow)"/>
+        
+              <!-- right bezier: symmetric -->
+              <path d="M50 20 C56 30, 64 40, 70 48" stroke="#000" stroke-width="0.9" fill="none" marker-end="url(#arrow)"/>
+            </svg>
+        
+            <!-- children row -->
+            <div style="height:220px; display:flex; align-items:flex-end; flex-direction:column;">
+              <div class="tree-row" style="margin-top:40px;">
+                <!-- left child -->
+                <div style="text-align:center;">
+                  <div class="action-label">${s.left_action}</div>
+                  <div class="video-card ${s.left_fail ? 'fail' : ''}">
+                    <video controls preload="metadata">
+                      <source src="${s.left_video}" type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+        
+                <!-- right child -->
+                <div style="text-align:center;">
+                  <div class="action-label">${s.right_action}</div>
+                  <div class="video-card ${s.right_fail ? 'fail' : ''}">
+                    <video controls preload="metadata">
+                      <source src="${s.right_video}" type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+              </div>
+            </div>
+        
+          </div>
+          `;
         }
         
+        // initial
         showSet(0);
         </script>
+        
         
 
 
