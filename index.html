@@ -84,6 +84,76 @@
             border-radius: 12px;
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
         }
+
+        /* --- tree demo layout --- */
+        .tree-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 25px;
+        }
+
+        .tree-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        /* action label */
+        .action-label {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        /* video wrapped with colored border */
+        .video-card {
+            border: 6px solid #4CAF50; /* default green */
+            border-radius: 15px;
+            overflow: hidden;
+            width: 260px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        /* red border version */
+        .video-card.fail {
+            border-color: #E53935;
+        }
+
+        /* connecting arrow */
+        .arrow-down {
+            width: 3px;
+            height: 40px;
+            background: black;
+            margin: 10px auto;
+        }
+
+        .arrow-branch {
+            display: flex;
+            justify-content: center;
+            gap: 200px;
+            width: 100%;
+        }
+
+        .arrow-line {
+            width: 120px;
+            height: 3px;
+            background: black;
+        }
+
+        .arrow-bend {
+            width: 40px;
+            height: 40px;
+            border: 3px solid black;
+            border-top: none;
+            border-right: none;
+            border-radius: 0 0 0 40px;
+        }
+
+
+
     </style>
 </head>
 
@@ -162,38 +232,76 @@
     </div>
     
     <script>
-    const sets = [
-        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
-        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
-        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
-        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
-        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
-        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
-        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
-        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
-    ];
-    
-    function showSet(idx){
-        const s = sets[idx];
-        document.getElementById('demo-box').innerHTML = `
-        <div style="display:flex; flex-direction:column; align-items:center;">
-            <!-- top image -->
-            <img src="${s.img}" style="max-width:30%; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,.15); margin-bottom:15px;">
-
-            <!-- bottom videos -->
-            <div style="display:flex; gap:20px; width:20%; justify-content:center;">
-                <video controls style="width:100%; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,.15);">
-                    <source src="${s.left}" type="video/mp4">
-                </video>
-                <video controls style="width:100%; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,.15);">
-                    <source src="${s.right}" type="video/mp4">
-                </video>
+        const sets = [
+            {
+                root_img:"static/pick.png",
+                root_action:"Pick up the apple",
+        
+                left_action:"Put into holder 1",
+                left_video:"static/holder1.mp4",
+                left_fail:true,
+        
+                right_action:"Put into holder 2",
+                right_video:"static/holder2.mp4",
+                right_fail:false,
+            },
+            ...
+        ];
+        
+        function showSet(idx){
+            const s = sets[idx];
+        
+            document.getElementById('demo-box').innerHTML = `
+            <div class="tree-block">
+        
+                <!-- root node -->
+                <div class="action-label">${s.root_action}</div>
+                <div class="video-card">
+                    <video controls width="260">
+                        <source src="${s.root_img}" type="video/mp4">
+                    </video>
+                </div>
+        
+                <!-- arrow downward -->
+                <div class="arrow-down"></div>
+        
+                <!-- branch graphic -->
+                <div class="arrow-branch">
+                    <div class="arrow-bend"></div>
+                    <div class="arrow-bend" style="transform:scaleX(-1);"></div>
+                </div>
+        
+                <!-- two children -->
+                <div class="tree-row">
+        
+                    <!-- left child -->
+                    <div>
+                        <div class="action-label">${s.left_action}</div>
+                        <div class="video-card ${s.left_fail ? 'fail':''}">
+                            <video controls width="260">
+                                <source src="${s.left_video}" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+        
+                    <!-- right child -->
+                    <div>
+                        <div class="action-label">${s.right_action}</div>
+                        <div class="video-card ${s.right_fail ? 'fail':''}">
+                            <video controls width="260">
+                                <source src="${s.right_video}" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+        
+                </div>
             </div>
-        </div>`;
-    }
-    showSet(0);
-
-    </script>
+            `;
+        }
+        
+        showSet(0);
+        </script>
+        
 
 
 
