@@ -81,8 +81,8 @@
 
         .img-block img {
             max-width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
         }
     </style>
 </head>
@@ -178,9 +178,9 @@
         document.getElementById('demo-box').innerHTML = `
         <div style="display:flex; flex-direction:column; align-items:center;">
             <!-- top image -->
-            <img src="${s.img}" style="max-width:70%; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,.15); margin-bottom:15px;">
+            <img src="${s.img}" style="max-width:30%; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,.15); margin-bottom:15px;">
             <!-- bottom videos -->
-            <div style="display:flex; gap:20px; width:70%;">
+            <div style="display:flex; gap:20px; width:20%;">
             <video controls style="flex:1; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,.15);">
                 <source src="${s.left}" type="video/mp4">
             </video>
