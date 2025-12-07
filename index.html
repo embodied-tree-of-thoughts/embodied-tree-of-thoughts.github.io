@@ -23,10 +23,11 @@
 
         .authors {
             text-align: center;
-            font-size: 1.1em;
+            font-size: 1.2em;
             margin-bottom: 1em;
             white-space: pre-line;
         }
+
 
         /* 摘要样式 */
         .abstract {
@@ -35,7 +36,6 @@
             padding: 0 50px; /* 增加左右内边距，使文本更易读 */
             font-size: 1.15em; /* 字体稍大 */
             line-height: 1.8;
-            border-left: 5px solid #333; /* 增加左侧边线以突出摘要 */
             background-color: #f9f9f9;
             padding: 20px 30px;
             border-radius: 5px;
@@ -95,36 +95,30 @@
     <br>
     <div class="authors">
         Wenjiang Xu<sup>1,5</sup>, Jiayu Wang<sup>2</sup>, Rui Fang<sup>2</sup>, Mingkang Zhang<sup>2</sup>, Lusong Li<sup>3</sup>, Jiayuan Gu<sup>4</sup>, Zecui Zeng<sup>3†</sup>, Rui Chen<sup>2†</sup>
-        <br>
-        <sup>1</sup> University of Chinese Academy of Sciences (UCAS); <sup>2</sup> Tsinghua University; <sup>3</sup> JD Explore Academy; <sup>4</sup> ShanghaiTech University; <sup>5</sup> Nanjing University<br>
+        <sup>1</sup> University of Chinese Academy of Sciences (UCAS); <sup>2</sup> Tsinghua University; <sup>3</sup> JD Explore Academy; <sup>4</sup> 
+        ShanghaiTech University; <sup>5</sup> Nanjing University
+        <small>† Corresponding author </small>   
     </div>
-
+    
     <div style="text-align: center; margin: 20px 0;">
         <span class="link-block">
             <a target="_blank" href="https://embodied-tree-of-thoughts.github.io/" title="Project Website">
-                <span class="icon"><i class="fab fa-github"></i></span>
+                <span class="icon"><i class="fas fa-globe"></i></span>
                 <span>Project Website</span>
             </a>
         </span>
 
         <span class="link-block">
-            <a target="_blank" href="https://arxiv.org/abs/2501.03841" title="ArXiv Paper">
+            <a target="_blank" href="https://github.com/HEA1OR/Embodied-Tree-of-Thoughts/tree/main" title="ArXiv Paper">
                 <span class="icon"><i class="fas fa-file-pdf"></i></span>
                 <span>ArXiv</span>
             </a>
         </span>
 
         <span class="link-block">
-            <a target="_blank" href="https://omnimanip.github.io" title="Video Link">
-                <span class="icon"><i class="fab fa-youtube"></i></span>
-                <span>Video</span>
-            </a>
-        </span>
-
-        <span class="link-block">
-            <a target="_blank" href="https://github.com/pmj110119/OmniManip" title="Code Repository">
+            <a target="_blank" href="https://github.com/HEA1OR/Embodied-Tree-of-Thoughts/tree/main" title="Code Repository">
                 <span class="icon"><i class="fab fa-github"></i></span>
-                <span>Code(Coming soon)</span>
+                <span>Code</span>
             </a>
         </span>
     </div>
@@ -138,15 +132,73 @@
 
     <div class="abstract">
         <h1>Abstract</h1>
-        World models have emerged as a pivotal component in robot manipulation planning, enabling agents to predict future environmental states and reason about the consequences of actions before execution. While video-generation models are increasingly adopted, they often lack rigorous physical grounding, leading to hallucinations and a failure to maintain consistency in long-horizon physical constraints. To address these limitations, we propose **Embodied Tree of Thoughts (EToT)**, a novel **Real2Sim2Real** planning framework that leverages a physics-based interactive digital twin as an embodied world model. EToT formulates manipulation planning as a tree search expanded through two synergistic mechanisms: (1) **Priori Branching**, which generates diverse candidate execution paths based on semantic and spatial analysis ; and (2) **Reflective Branching**, which utilizes VLMs to diagnose execution failures within the simulator and iteratively refine the planning tree with corrective actions. By grounding high-level reasoning in a physics simulator, our framework ensures that generated plans adhere to rigid-body dynamics and collision constraints. We validate EToT on a suite of short- and long-horizon manipulation tasks, where it consistently outperforms baselines by effectively predicting physical dynamics and adapting to potential failures.
+        World models have emerged as a pivotal component in robot manipulation planning, enabling agents to predict future environmental states and reason about the consequences of actions before execution. While video-generation models are increasingly adopted, they often lack rigorous physical grounding, leading to hallucinations and a failure to maintain consistency in long-horizon physical constraints. To address these limitations, we propose Embodied Tree of Thoughts (EToT), a novel Real2Sim2Real planning framework that leverages a physics-based interactive digital twin as an embodied world model. EToT formulates manipulation planning as a tree search expanded through two synergistic mechanisms: (1) Priori Branching, which generates diverse candidate execution paths based on semantic and spatial analysis ; and (2) Reflective Branching which utilizes VLMs to diagnose execution failures within the simulator and iteratively refine the planning tree with corrective actions. By grounding high-level reasoning in a physics simulator, our framework ensures that generated plans adhere to rigid-body dynamics and collision constraints. We validate EToT on a suite of short- and long-horizon manipulation tasks, where it consistently outperforms baselines by effectively predicting physical dynamics and adapting to potential failures.
     </div>
 
     <div class="img-block">
         <img src="static/etot.png" alt="Framework of the Embodied Tree of Thoughts">
     </div>
+
+        
+    Given a task instruction, the system first reconstructs the real scene into an interactive 3D digital twin. It then constructs a world-model-grounded planning tree through <em>Priori Branching</em> and <em>Reflective Branching</em>. Priori Branching proposes initial candidate branches, while Reflective Branching analyzes simulated execution failures to expand the tree with revised branches. Through iterative searching and expansion of the planning tree, the system identifies a feasible plan, which is finally executed on the real robot in a closed-loop manner with visual feedback and re-planning.</p>
+    
+    <!-- -------------- Interactive Demo -------------- -->
+    <div style="margin: 60px 0; text-align: center;">
+
+        <!-- 8 buttons -->
+        <div id="btn-row">
+        <button onclick="showSet(0)">Short task 1</button>
+        <button onclick="showSet(1)">Short task 2</button>
+        <button onclick="showSet(2)">Short task 3</button>
+        <button onclick="showSet(3)">Short task 4</button>
+        <button onclick="showSet(4)">Disturbance</button>
+        <button onclick="showSet(5)">Long task 1</button>
+        <button onclick="showSet(6)">Long task 2</button>
+        <button onclick="showSet(7)">Long task 3</button>
+        </div>
+    
+        <!-- dynamic content: 3 boxes -->
+        <div id="demo-box" style="margin-top: 25px;"></div>
+    </div>
+    
+    <script>
+    const sets = [
+        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
+        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
+        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
+        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
+        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
+        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
+        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
+        {img:'static/etot.png',  left:'static/teaser.mp4',  right:'static/teaser.mp4'},
+    ];
+    
+    function showSet(idx){
+        const s = sets[idx];
+        document.getElementById('demo-box').innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center;">
+            <!-- top image -->
+            <img src="${s.img}" style="max-width:70%; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,.15); margin-bottom:15px;">
+            <!-- bottom videos -->
+            <div style="display:flex; gap:20px; width:70%;">
+            <video controls style="flex:1; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,.15);">
+                <source src="${s.left}" type="video/mp4">
+            </video>
+            <video controls style="flex:1; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,.15);">
+                <source src="${s.right}" type="video/mp4">
+            </video>
+            </div>
+        </div>`;
+    }
+    showSet(0);
+    </script>
+
+
+
     <div class="img-block">
         <img src="static/task1.png" alt="Results for Short-horizon Tasks">
     </div>
+
     <div class="img-block">
         <img src="static/task2.png" alt="Results for Long-horizon Tasks">
     </div>
