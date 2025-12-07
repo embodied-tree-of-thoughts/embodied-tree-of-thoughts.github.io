@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Embodied Tree of Thoughts</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             font-family: 'Noto Sans', sans-serif;
@@ -27,11 +28,55 @@
             white-space: pre-line;
         }
 
+        /* 摘要样式 */
+        .abstract {
+            text-align: justify; /* 保持段落自然对齐 */
+            margin: 40px 0;
+            padding: 0 50px; /* 增加左右内边距，使文本更易读 */
+            font-size: 1.15em; /* 字体稍大 */
+            line-height: 1.8;
+            border-left: 5px solid #333; /* 增加左侧边线以突出摘要 */
+            background-color: #f9f9f9;
+            padding: 20px 30px;
+            border-radius: 5px;
+        }
+
+        .abstract h2 {
+            text-align: center;
+            font-size: 1.4em;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        .link-block a {
+            display: inline-block;
+            margin: 0 5px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            background-color: #333;
+        }
+
+        .video-container {
+            width: 100%;
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .video-container video {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+        }
+        
         .img-block {
-        width: 100%;
-        margin: 50px 0;
-        display: flex;
-        justify-content: center;
+            width: 100%;
+            margin: 50px 0;
+            display: flex;
+            justify-content: center;
         }
 
         .img-block img {
@@ -48,34 +93,62 @@
         <span style="font-size: 2.5rem;">Deliberate Robot Manipulation Planning with World Models</span>
     </h1>
     <br>
-    <div class="authors">Wenjiang Xu<sup>1,5</sup>, Jiayu Wang<sup>2</sup>, Rui Fang<sup>2</sup>, Mingkang Zhang<sup>2</sup>, Lusong Li<sup>3</sup>, Jiayuan Gu<sup>4</sup>, Zecui Zeng<sup>3†</sup>, Rui Chen<sup>2†</sup>
-    <br>
-    <sup>1</sup> University of Chinese Academy of Sciences (UCAS); <sup>2</sup> Tsinghua University; <sup>3</sup> JD Explore Academy; <sup>4</sup> ShanghaiTech University; <sup>5</sup> Nanjing University<br>
-
+    <div class="authors">
+        Wenjiang Xu<sup>1,5</sup>, Jiayu Wang<sup>2</sup>, Rui Fang<sup>2</sup>, Mingkang Zhang<sup>2</sup>, Lusong Li<sup>3</sup>, Jiayuan Gu<sup>4</sup>, Zecui Zeng<sup>3†</sup>, Rui Chen<sup>2†</sup>
+        <br>
+        <sup>1</sup> University of Chinese Academy of Sciences (UCAS); <sup>2</sup> Tsinghua University; <sup>3</sup> JD Explore Academy; <sup>4</sup> ShanghaiTech University; <sup>5</sup> Nanjing University<br>
     </div>
 
-    <!-- Code Link -->
-    <span class="link-block">
-        <a target="_blank" href="https://embodied-tree-of-thoughts.github.io/"
-            class="external-link button is-normal is-rounded is-dark">
-            <span class="icon">
-                <i class="fab fa-github"></i>
-            </span>
-            <span>Project Website</span>
-        </a>
-    </span>
+    <div style="text-align: center; margin: 20px 0;">
+        <span class="link-block">
+            <a target="_blank" href="https://embodied-tree-of-thoughts.github.io/" title="Project Website">
+                <span class="icon"><i class="fab fa-github"></i></span>
+                <span>Project Website</span>
+            </a>
+        </span>
+
+        <span class="link-block">
+            <a target="_blank" href="https://arxiv.org/abs/2501.03841" title="ArXiv Paper">
+                <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                <span>ArXiv</span>
+            </a>
+        </span>
+
+        <span class="link-block">
+            <a target="_blank" href="https://omnimanip.github.io" title="Video Link">
+                <span class="icon"><i class="fab fa-youtube"></i></span>
+                <span>Video</span>
+            </a>
+        </span>
+
+        <span class="link-block">
+            <a target="_blank" href="https://github.com/pmj110119/OmniManip" title="Code Repository">
+                <span class="icon"><i class="fab fa-github"></i></span>
+                <span>Code(Coming soon)</span>
+            </a>
+        </span>
+    </div>
+
+    <div class="video-container">
+        <video controls autoplay muted loop>
+            <source src="static/teaser.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="abstract">
+        <h1>Abstract</h1>
+        World models have emerged as a pivotal component in robot manipulation planning, enabling agents to predict future environmental states and reason about the consequences of actions before execution. While video-generation models are increasingly adopted, they often lack rigorous physical grounding, leading to hallucinations and a failure to maintain consistency in long-horizon physical constraints. To address these limitations, we propose **Embodied Tree of Thoughts (EToT)**, a novel **Real2Sim2Real** planning framework that leverages a physics-based interactive digital twin as an embodied world model. EToT formulates manipulation planning as a tree search expanded through two synergistic mechanisms: (1) **Priori Branching**, which generates diverse candidate execution paths based on semantic and spatial analysis ; and (2) **Reflective Branching**, which utilizes VLMs to diagnose execution failures within the simulator and iteratively refine the planning tree with corrective actions. By grounding high-level reasoning in a physics simulator, our framework ensures that generated plans adhere to rigid-body dynamics and collision constraints. We validate EToT on a suite of short- and long-horizon manipulation tasks, where it consistently outperforms baselines by effectively predicting physical dynamics and adapting to potential failures.
+    </div>
 
     <div class="img-block">
-        <img src="static/teaser.png" alt="Embodied Tree of Thoughts: Deliberate Robot Manipulation Planning with World Model">
+        <img src="static/etot.png" alt="Framework of the Embodied Tree of Thoughts">
     </div>
     <div class="img-block">
-        <img src="static/etot.png" alt="Framework">
+        <img src="static/task1.png" alt="Results for Short-horizon Tasks">
     </div>
     <div class="img-block">
-        <img src="static/task1.png" alt="Short-horizon Tasks">
-    </div>
-    <div class="img-block">
-        <img src="static/task2.png" alt="Long-horizon Tasks">
+        <img src="static/task2.png" alt="Results for Long-horizon Tasks">
     </div>
 
 </body>
