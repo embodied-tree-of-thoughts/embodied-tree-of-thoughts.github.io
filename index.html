@@ -342,6 +342,88 @@
             }
             .arrow-top-gap { margin-top: 0; }
         }
+                /* ========================================= */
+        /* 3. 视频侧边切换按钮样式 (Side Toolbar)     */
+        /* ========================================= */
+        
+        /* 新增：包裹视频和按钮的容器，用于定位 */
+        .media-wrapper {
+            position: relative;
+            width: 100%;
+            /* 确保视频仍然占满卡片 */
+            display: flex; 
+            align-items: center; 
+        }
+        
+        /* 侧边工具栏容器 */
+        .side-toolbar {
+            position: absolute;
+            right: -40px; /* 移到卡片外部右侧 */
+            top: 50%;
+            transform: translateY(-50%); /* 垂直居中 */
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* 按钮之间的间距 */
+            z-index: 20;
+        }
+        
+        /* 按钮基础样式 */
+        .view-btn {
+            width: 28px;
+            height: 28px;
+            background: #fff;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .view-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        /* 选中状态（可选） */
+        .view-btn.active {
+            background-color: #f0f0f0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* --- 根据你的图片定制的三种颜色 --- */
+        
+        /* 1. 蓝色按钮 (比如 RGB) */
+        .btn-blue {
+            border-color: #3498db;
+            color: #3498db;
+        }
+        .btn-blue:hover, .btn-blue.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        /* 2. 黄色按钮 (比如 Depth/Sim) */
+        .btn-yellow {
+            border-color: #f1c40f;
+            color: #f1c40f;
+        }
+        .btn-yellow:hover, .btn-yellow.active {
+            background: #f1c40f;
+            color: white;
+        }
+        
+        /* 3. 深灰/黑色按钮 (比如 Mask/Seg) */
+        .btn-dark {
+            border-color: #34495e;
+            color: #34495e;
+        }
+        .btn-dark:hover, .btn-dark.active {
+            background: #34495e;
+            color: white;
+        }
     </style>
 </head>
 
@@ -492,10 +574,34 @@
             <div class="branch-col">
                 <div class="arrow-top-gap css-arrow-down"></div>
                 
-                <div class="t-card fail">
+                <!-- 这是一个修改后的卡片示例 -->
+                <div class="t-card">
                     <span class="t-label">Open the door</span>
-                    <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
-                    <div class="status-badge"><i class="fas fa-times"></i></div>
+                    
+                    <!-- 新增 wrapper -->
+                    <div class="media-wrapper">
+
+                        <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
+                        
+                        <!-- 右侧按钮组 -->
+                        <div class="side-toolbar">
+                            <!-- 按钮 1: Blue -->
+                            <!-- data-src 属性存放你想切换的视频路径 -->
+                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/teaser.mp4')">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            
+                            <!-- 按钮 2: Yellow -->
+                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/teaser.mp4')">
+                                <i class="fas fa-cube"></i>
+                            </div>
+                            
+                            <!-- 按钮 3: Dark -->
+                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/teaser.mp4')">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -511,31 +617,134 @@
                 </div>
 
                 <!-- 步骤 1 -->
+                <!-- 这是一个修改后的卡片示例 -->
                 <div class="t-card">
                     <span class="t-label">Pick up the tennis</span>
-                    <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
+                    
+                    <!-- 新增 wrapper -->
+                    <div class="media-wrapper">
+                        <!-- 给 video 加个 class 或 id 方便脚本查找，这里其实只要是 wrapper 内的 video 即可 -->
+                        <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
+                        
+                        <!-- 右侧按钮组 -->
+                        <div class="side-toolbar">
+                            <!-- 按钮 1: Blue -->
+                            <!-- data-src 属性存放你想切换的视频路径 -->
+                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/teaser.mp4')">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            
+                            <!-- 按钮 2: Yellow -->
+                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/teaser.mp4')">
+                                <i class="fas fa-cube"></i>
+                            </div>
+                            
+                            <!-- 按钮 3: Dark -->
+                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/teaser.mp4')">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="step-arrow-icon"><i class="fas fa-arrow-down"></i></div>
 
                 <!-- 步骤 2 -->
+                <!-- 这是一个修改后的卡片示例 -->
                 <div class="t-card">
                     <span class="t-label">Put on the desk</span>
-                    <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
+                    
+                    <!-- 新增 wrapper -->
+                    <div class="media-wrapper">
+                        <!-- 给 video 加个 class 或 id 方便脚本查找，这里其实只要是 wrapper 内的 video 即可 -->
+                        <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
+                        
+                        <!-- 右侧按钮组 -->
+                        <div class="side-toolbar">
+                            <!-- 按钮 1: Blue -->
+                            <!-- data-src 属性存放你想切换的视频路径 -->
+                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/teaser.mp4')">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            
+                            <!-- 按钮 2: Yellow -->
+                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/teaser.mp4')">
+                                <i class="fas fa-cube"></i>
+                            </div>
+                            
+                            <!-- 按钮 3: Dark -->
+                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/teaser.mp4')">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="step-arrow-icon"><i class="fas fa-arrow-down"></i></div>
 
                 <!-- 步骤 3 -->
-                <div class="t-card success">
+                <!-- 这是一个修改后的卡片示例 -->
+                <div class="t-card">
                     <span class="t-label">Open the door</span>
-                    <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
-                    <div class="status-badge"><i class="fas fa-check"></i></div>
+                    
+                    <!-- 新增 wrapper -->
+                    <div class="media-wrapper">
+                        <!-- 给 video 加个 class 或 id 方便脚本查找，这里其实只要是 wrapper 内的 video 即可 -->
+                        <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
+                        
+                        <!-- 右侧按钮组 -->
+                        <div class="side-toolbar">
+                            <!-- 按钮 1: Blue -->
+                            <!-- data-src 属性存放你想切换的视频路径 -->
+                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/teaser.mp4')">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            
+                            <!-- 按钮 2: Yellow -->
+                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/teaser.mp4')">
+                                <i class="fas fa-cube"></i>
+                            </div>
+                            
+                            <!-- 按钮 3: Dark -->
+                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/teaser.mp4')">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+<script>
+    function changeVideo(btnElement, videoSource) {
+        // 1. 找到当前按钮所在的 wrapper
+        const wrapper = btnElement.closest('.media-wrapper');
+        
+        // 2. 找到 wrapper 里的 video 标签
+        const video = wrapper.querySelector('video');
+        
+        // 3. 切换视频源 (如果源不同才切换，避免闪烁)
+        // 获取当前 src 的相对/绝对路径比较有点麻烦，这里直接赋值即可
+        // 为了演示效果，即使源一样我们也重载一下，或者你可以打印 console
+        if (!video.src.includes(videoSource)) {
+            video.src = videoSource;
+            video.play(); // 确保切换后自动播放
+        } else {
+            console.log("Already playing this video source");
+            // 如果为了演示“点击有效”，可以让视频重头播放：
+            // video.currentTime = 0;
+            // video.play();
+        }
 
+        // 4. 更新按钮的高亮状态 (UI 交互)
+        // 找到同组的所有按钮
+        const allBtns = btnElement.parentElement.querySelectorAll('.view-btn');
+        // 移除所有 active
+        allBtns.forEach(btn => btn.classList.remove('active'));
+        // 给当前点击的按钮添加 active
+        btnElement.classList.add('active');
+    }
+</script>
 </body>
 
 </html>
