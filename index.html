@@ -31,10 +31,13 @@
 
         /* 摘要样式 */
         .abstract {
-            text-align: justify; /* 保持段落自然对齐 */
+            text-align: justify;
+            /* 保持段落自然对齐 */
             margin: 40px 0;
-            padding: 0 50px; /* 增加左右内边距，使文本更易读 */
-            font-size: 1.15em; /* 字体稍大 */
+            padding: 0 50px;
+            /* 增加左右内边距，使文本更易读 */
+            font-size: 1.15em;
+            /* 字体稍大 */
             line-height: 1.8;
             background-color: #f9f9f9;
             padding: 20px 30px;
@@ -47,7 +50,7 @@
             margin-top: 0;
             margin-bottom: 15px;
         }
-        
+
         .link-block a {
             display: inline-block;
             margin: 0 5px;
@@ -71,7 +74,7 @@
             border-radius: 8px;
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
         }
-        
+
         .img-block {
             width: 100%;
             margin: 50px 0;
@@ -85,58 +88,189 @@
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
         }
 
-/* container for tree view - keep relative for absolute svg positioning */
-        .tree-block {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 25px;
-        padding-bottom: 10px;
-        min-height: 320px; /* keep space for svg connectors */
+        /* ------------------------------------------------------- */
+        /*  新增：树状结构专用 CSS (Task Tree Styles)               */
+        /* ------------------------------------------------------- */
+        
+        /* 1. 外层虚线大框 */
+        .task-tree-container {
+            border: 4px dashed #333;
+            border-radius: 20px;
+            padding: 40px 20px;
+            margin: 60px auto; /* 上下间距 */
+            position: relative;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* svg connector fills horizontal area between nodes */
-        .connector-svg {
-        position: absolute;
-        top: 80px;      /* place svg below root card - adjust if needed */
-        left: 0;
-        width: 100%;
-        height: 160px;  /* adjust to fit curves */
-        pointer-events: none; /* allow clicks through */
+        /* 任务标题 (Task 1) */
+        .task-header-label {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
         }
 
-        /* labels & cards same as before but narrower */
-        .tree-row {
-        display: flex;
-        justify-content: center;
-        gap: 80px;
-        margin-top: 20px;
+        /* 任务指令气泡 */
+        .task-instruction {
+            background: #eee;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #333;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            position: absolute;
+            top: 20px;
+            right: 150px; /* 放在Task 1左边 */
+            font-size: 0.9em;
+        }
+        @media (max-width: 700px) {
+            .task-instruction { position: relative; top: 0; right: 0; margin-bottom: 20px; }
+            .task-header-label { position: relative; top: 0; right: 0; margin-bottom: 10px; }
         }
 
-        .action-label {
-        text-align: center;
-        font-weight: 600;
-        margin-bottom: 8px;
-        font-size: 1.05em;
+        /* 2. 节点卡片通用样式 */
+        .t-card {
+            background: white;
+            border: 3px solid #ccc; /* 默认灰色边框 */
+            border-radius: 12px;
+            padding: 6px;
+            width: 200px;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            z-index: 2; /* 保证在连线之上 */
+        }
+        
+        .t-card img, .t-card video {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 6px;
         }
 
-        .video-card {
-        border: 6px solid #4CAF50;
-        border-radius: 14px;
-        overflow: hidden;
-        width: 300px;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-        background: white;
+        /* 卡片顶部的文字标签 (Initial State等) */
+        .t-label {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #e8e8e8;
+            padding: 2px 12px;
+            font-size: 12px;
+            border-radius: 4px;
+            border: 1px solid #999;
+            font-weight: bold;
+            white-space: nowrap;
+            color: #333;
+            z-index: 3;
         }
 
-        .video-card.fail { border-color: #E53935; }
+        /* 状态框颜色 */
+        .t-card.fail { border-color: #E53935; } /* 红色 */
+        .t-card.success { border-color: #76c94e; } /* 绿色 */
 
-        /* reduce video height to look nicer */
-        .video-card video { display:block; width:100%; height:170px; object-fit:cover; }
+        /* 状态图标 (勾/叉) */
+        .status-badge {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+        .fail .status-badge { background: #E53935; }
+        .success .status-badge { background: #76c94e; }
 
+        /* 3. 布局结构 */
+        .tree-level-root {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0;
+        }
 
+        /* 连线分叉结构 */
+        .connector-split {
+            height: 50px;
+            width: 320px; /* 控制左右分叉的宽度 */
+            border-top: 3px solid #333;
+            display: flex;
+            justify-content: space-between;
+            margin-top: -3px; /* 接上图片底部 */
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 根节点下来的垂直线 (需要伪元素) */
+        .tree-level-root::after {
+            content: '';
+            display: block;
+            width: 3px;
+            height: 30px;
+            background: #333;
+            position: absolute;
+            top: 200px; /* 根据图片高度调整，这里大约是预估位置 */
+        }
 
+        .connector-split .line-vertical {
+            width: 3px;
+            height: 100%;
+            background: #333;
+        }
+
+        /* 分支容器 */
+        .branches-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 120px; /* 左右两列的间距 */
+            margin-top: -5px; /* 连接线微调 */
+        }
+
+        .branch-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 箭头 */
+        .arrow-down {
+            width: 0; 
+            height: 0; 
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 10px solid #333;
+            margin-bottom: 8px;
+        }
+
+        .arrow-curved {
+            font-size: 28px;
+            color: #333;
+            margin: 5px 0;
+            font-weight: bold;
+        }
+
+        /* 黄色分支标签 */
+        .branch-tag {
+            background: #faeab1;
+            padding: 4px 10px;
+            border: 2px solid #333;
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+        }
 
     </style>
 </head>
@@ -149,11 +283,11 @@
     <br>
     <div class="authors">
         Wenjiang Xu<sup>1,5</sup>, Jiayu Wang<sup>2</sup>, Rui Fang<sup>2</sup>, Mingkang Zhang<sup>2</sup>, Lusong Li<sup>3</sup>, Jiayuan Gu<sup>4</sup>, Zecui Zeng<sup>3†</sup>, Rui Chen<sup>2†</sup>
-        <sup>1</sup> University of Chinese Academy of Sciences (UCAS); <sup>2</sup> Tsinghua University; <sup>3</sup> JD Explore Academy; <sup>4</sup> 
+        <sup>1</sup> University of Chinese Academy of Sciences (UCAS); <sup>2</sup> Tsinghua University; <sup>3</sup> JD Explore Academy; <sup>4</sup>
         ShanghaiTech University; <sup>5</sup> Nanjing University
-        <small>† Corresponding author </small>   
+        <small>† Corresponding author </small>
     </div>
-    
+
     <div style="text-align: center; margin: 20px 0;">
         <span class="link-block">
             <a target="_blank" href="https://embodied-tree-of-thoughts.github.io/" title="Project Website">
@@ -186,17 +320,34 @@
 
     <div class="abstract">
         <h1>Abstract</h1>
-        World models have emerged as a pivotal component in robot manipulation planning, enabling agents to predict future environmental states and reason about the consequences of actions before execution. While video-generation models are increasingly adopted, they often lack rigorous physical grounding, leading to hallucinations and a failure to maintain consistency in long-horizon physical constraints. To address these limitations, we propose Embodied Tree of Thoughts (EToT), a novel Real2Sim2Real planning framework that leverages a physics-based interactive digital twin as an embodied world model. EToT formulates manipulation planning as a tree search expanded through two synergistic mechanisms: (1) Priori Branching, which generates diverse candidate execution paths based on semantic and spatial analysis ; and (2) Reflective Branching which utilizes VLMs to diagnose execution failures within the simulator and iteratively refine the planning tree with corrective actions. By grounding high-level reasoning in a physics simulator, our framework ensures that generated plans adhere to rigid-body dynamics and collision constraints. We validate EToT on a suite of short- and long-horizon manipulation tasks, where it consistently outperforms baselines by effectively predicting physical dynamics and adapting to potential failures.
+        World models have emerged as a pivotal component in robot manipulation planning, enabling agents to predict future
+        environmental states and reason about the consequences of actions before execution. While video-generation models
+        are increasingly adopted, they often lack rigorous physical grounding, leading to hallucinations and a failure to
+        maintain consistency in long-horizon physical constraints. To address these limitations, we propose Embodied
+        Tree of Thoughts (EToT), a novel Real2Sim2Real planning framework that leverages a physics-based interactive
+        digital twin as an embodied world model. EToT formulates manipulation planning as a tree search expanded through
+        two synergistic mechanisms: (1) Priori Branching, which generates diverse candidate execution paths based on
+        semantic and spatial analysis ; and (2) Reflective Branching which utilizes VLMs to diagnose execution failures
+        within the simulator and iteratively refine the planning tree with corrective actions. By grounding high-level
+        reasoning in a physics simulator, our framework ensures that generated plans adhere to rigid-body dynamics and
+        collision constraints. We validate EToT on a suite of short- and long-horizon manipulation tasks, where it
+        consistently outperforms baselines by effectively predicting physical dynamics and adapting to potential
+        failures.
     </div>
 
     <div class="img-block">
         <img src="static/etot.png" alt="Framework of the Embodied Tree of Thoughts">
     </div>
 
-        
-    Given a task instruction, the system first reconstructs the real scene into an interactive 3D digital twin. It then constructs a world-model-grounded planning tree through <em>Priori Branching</em> and <em>Reflective Branching</em>. Priori Branching proposes initial candidate branches, while Reflective Branching analyzes simulated execution failures to expand the tree with revised branches. Through iterative searching and expansion of the planning tree, the system identifies a feasible plan, which is finally executed on the real robot in a closed-loop manner with visual feedback and re-planning.</p>
 
-
+    <p style="text-align: justify; padding: 0 20px; max-width: 900px; margin: 0 auto;">
+        Given a task instruction, the system first reconstructs the real scene into an interactive 3D digital twin. It
+        then constructs a world-model-grounded planning tree through <em>Priori Branching</em> and <em>Reflective
+            Branching</em>. Priori Branching proposes initial candidate branches, while Reflective Branching analyzes
+        simulated execution failures to expand the tree with revised branches. Through iterative searching and expansion
+        of the planning tree, the system identifies a feasible plan, which is finally executed on the real robot in a
+        closed-loop manner with visual feedback and re-planning.
+    </p>
 
 
     <div class="img-block">
@@ -206,6 +357,82 @@
     <div class="img-block">
         <img src="static/task2.png" alt="Results for Long-horizon Tasks">
     </div>
+
+    <!-- ======================================================= -->
+    <!--  新增区域：树状图 (Tree Visualization)                   -->
+    <!-- ======================================================= -->
+    <div class="task-tree-container">
+        
+        <!-- 顶部：任务说明和标题 -->
+        <div class="task-instruction">
+            <i class="fas fa-user-circle" style="font-size: 1.5em;"></i> 
+            Open the door of the microwave oven
+        </div>
+        <div class="task-header-label">Task 1</div>
+
+        <!-- 1. 根节点 (Root Node) -->
+        <div class="tree-level-root">
+            <div class="t-card">
+                <span class="t-label">Initial State</span>
+                <!-- 图片占位符 -->
+                <img src="static/teaser.png" alt="Initial State">
+            </div>
+        </div>
+
+        <!-- 2. 连接线 (Connectors) -->
+        <div class="connector-split">
+            <div class="line-vertical"></div> <!-- 左垂线 -->
+            <div class="line-vertical"></div> <!-- 右垂线 -->
+        </div>
+
+        <!-- 3. 分支区域 (Branches) -->
+        <div class="branches-wrapper">
+            
+            <!-- 左分支 (Left Branch: Failure) -->
+            <div class="branch-col">
+                <div class="arrow-down"></div>
+                <div class="t-card fail">
+                    <span class="t-label">Open the door</span>
+                    <!-- 视频占位符 -->
+                    <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
+                    <div class="status-badge"><i class="fas fa-times"></i></div>
+                </div>
+            </div>
+
+            <!-- 右分支 (Right Branch: Success Sequence) -->
+            <div class="branch-col">
+                <!-- 分支标签 -->
+                <div class="branch-tag">New Branch</div>
+                <div class="arrow-down"></div>
+                
+                <!-- 步骤 1 -->
+                <div class="t-card">
+                    <span class="t-label">Pick up the tennis</span>
+                    <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
+                </div>
+
+                <!-- 弯曲箭头 -->
+                <div class="arrow-curved">⤵</div>
+
+                <!-- 步骤 2 -->
+                <div class="t-card">
+                    <span class="t-label">Put on the desk</span>
+                    <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
+                </div>
+
+                <!-- 向下箭头 -->
+                <div class="arrow-curved">⬇</div>
+
+                <!-- 步骤 3 (成功) -->
+                <div class="t-card success">
+                    <span class="t-label">Open the door</span>
+                    <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
+                    <div class="status-badge"><i class="fas fa-check"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ================= END TREE ================= -->
 
 </body>
 
