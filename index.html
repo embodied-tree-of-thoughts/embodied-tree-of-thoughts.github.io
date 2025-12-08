@@ -442,20 +442,20 @@
         <div class="branches-container">
             
             <!-- SVG 虚线连接 (从左侧失败卡片指向右侧 New Branch) -->
-            <!-- 坐标是硬编码的，基于 width=220 和 gap=100 计算得出，确保不同屏幕下相对位置稳定 -->
-            <svg class="dashed-svg-container" viewBox="0 0 600 400" preserveAspectRatio="none">
-                <!-- 
-                   M 110 130  (起点: 左侧卡片的右侧中心附近)
-                   C 180 130, 200 130, 340 40 (贝塞尔曲线控制点)
-                   (终点: 右侧标签的上方)
-                -->
-                <path d="M 230 150 C 260 150, 280 150, 310 50" 
-                      stroke="#7f8c8d" stroke-width="3" stroke-dasharray="8,5" fill="none" marker-end="url(#arrowhead)"/>
+            <svg class="dashed-svg-container" viewBox="0 0 600 400" preserveAspectRatio="xMidYMin slice">
                 <defs>
-                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                        <polygon points="0 0, 10 3.5, 0 7" fill="#7f8c8d" />
+                    <marker id="arrowhead" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
+                        <polygon points="0 0, 12 4, 0 8" fill="#7f8c8d" />
                     </marker>
                 </defs>
+                <!-- 
+                   路径说明 (基于 viewBox 600x400 的估算坐标):
+                   M 150 230 : 起点 (左侧卡片的底部中心位置)
+                   C 150 310, 300 150 : 贝塞尔曲线控制点 (先向下延伸，再向右上弯曲)
+                   360 45    : 终点 (右侧 "New Branch" 标签的左侧位置)
+                -->
+                <path d="M 150 230 C 150 310, 300 150, 360 45" 
+                      stroke="#7f8c8d" stroke-width="3" stroke-dasharray="8,5" fill="none" marker-end="url(#arrowhead)"/>
             </svg>
 
             <!-- 横梁连接线 -->
