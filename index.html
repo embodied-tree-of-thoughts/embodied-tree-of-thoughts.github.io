@@ -5,15 +5,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Embodied Tree of Thoughts</title>
+    <!-- 字体和图标库 -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
     <style>
+        /* ========================================= */
+        /* 1. 基础页面样式 (保持原样)                 */
+        /* ========================================= */
         body {
             font-family: 'Noto Sans', sans-serif;
             margin: 0 auto;
             max-width: 900px;
             padding: 20px;
             line-height: 1.6;
+            background-color: #ffffff;
+            color: #333;
         }
 
         h1 {
@@ -28,19 +35,13 @@
             white-space: pre-line;
         }
 
-
-        /* 摘要样式 */
         .abstract {
             text-align: justify;
-            /* 保持段落自然对齐 */
             margin: 40px 0;
-            padding: 0 50px;
-            /* 增加左右内边距，使文本更易读 */
+            padding: 20px 30px;
             font-size: 1.15em;
-            /* 字体稍大 */
             line-height: 1.8;
             background-color: #f9f9f9;
-            padding: 20px 30px;
             border-radius: 5px;
         }
 
@@ -88,190 +89,247 @@
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* ------------------------------------------------------- */
-        /*  新增：树状结构专用 CSS (Task Tree Styles)               */
-        /* ------------------------------------------------------- */
+        /* ========================================= */
+        /* 2. 树状结构样式 (Tree Visualization)       */
+        /* ========================================= */
         
-        /* 1. 外层虚线大框 */
         .task-tree-container {
-            border: 4px dashed #333;
+            border: 4px dashed #bdc3c7;
             border-radius: 20px;
-            padding: 40px 20px;
-            margin: 60px auto; /* 上下间距 */
+            padding: 50px 20px;
+            margin: 60px auto;
             position: relative;
             background: white;
             display: flex;
             flex-direction: column;
             align-items: center;
+            /* 限制宽度以保证对齐 */
+            max-width: 850px; 
+            overflow: visible; /* 允许虚线溢出 */
         }
 
-        /* 任务标题 (Task 1) */
-        .task-header-label {
+        /* 右上角 Task 标题 */
+        .task-header-group {
             position: absolute;
             top: 20px;
             right: 30px;
+            text-align: right;
+            z-index: 20;
+        }
+        
+        .task-label {
             font-family: 'Google Sans', sans-serif;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-            color: #333;
+            color: #2c3e50;
         }
 
-        /* 任务指令气泡 */
         .task-instruction {
-            background: #eee;
-            padding: 10px 20px;
+            background: #f1f3f4;
+            padding: 8px 16px;
             border-radius: 20px;
-            font-weight: bold;
-            color: #333;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            position: absolute;
-            top: 20px;
-            right: 150px; /* 放在Task 1左边 */
             font-size: 0.9em;
-        }
-        @media (max-width: 700px) {
-            .task-instruction { position: relative; top: 0; right: 0; margin-bottom: 20px; }
-            .task-header-label { position: relative; top: 0; right: 0; margin-bottom: 10px; }
+            color: #555;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
         }
 
-        /* 2. 节点卡片通用样式 */
+        /* --- 卡片组件 --- */
         .t-card {
             background: white;
-            border: 3px solid #ccc; /* 默认灰色边框 */
+            border: 3px solid #e0e0e0;
             border-radius: 12px;
-            padding: 6px;
-            width: 200px;
+            padding: 5px;
+            width: 220px; /* 固定宽度：对齐的关键 */
             position: relative;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin-bottom: 10px;
-            z-index: 2; /* 保证在连线之上 */
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            z-index: 10;
         }
         
         .t-card img, .t-card video {
             width: 100%;
             height: auto;
             display: block;
-            border-radius: 6px;
+            border-radius: 8px;
+            background: #000;
         }
 
-        /* 卡片顶部的文字标签 (Initial State等) */
+        /* 浮动标签 (Initial State 等) */
         .t-label {
             position: absolute;
             top: -14px;
             left: 50%;
             transform: translateX(-50%);
-            background: #e8e8e8;
+            background: #ecf0f1;
             padding: 2px 12px;
             font-size: 12px;
-            border-radius: 4px;
-            border: 1px solid #999;
-            font-weight: bold;
+            border-radius: 12px;
+            border: 1px solid #bdc3c7;
+            font-weight: 700;
             white-space: nowrap;
-            color: #333;
-            z-index: 3;
+            color: #2c3e50;
+            z-index: 15;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* 状态框颜色 */
-        .t-card.fail { border-color: #E53935; } /* 红色 */
-        .t-card.success { border-color: #76c94e; } /* 绿色 */
+        /* 状态样式 */
+        .t-card.fail { border-color: #e74c3c; }
+        .t-card.success { border-color: #27ae60; }
 
-        /* 状态图标 (勾/叉) */
         .status-badge {
             position: absolute;
             bottom: 10px;
             left: 10px;
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 16px;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .fail .status-badge { background: #E53935; }
-        .success .status-badge { background: #76c94e; }
+        .fail .status-badge { background: #e74c3c; }
+        .success .status-badge { background: #27ae60; }
 
-        /* 3. 布局结构 */
-        .tree-level-root {
+        /* --- 结构与连线 (Layout & Lines) --- */
+        
+        /* 根节点区域 */
+        .root-wrapper {
+            position: relative;
+            margin-bottom: 30px; 
             display: flex;
             justify-content: center;
-            margin-bottom: 0;
-        }
-
-        /* 连线分叉结构 */
-        .connector-split {
-            height: 50px;
-            width: 320px; /* 控制左右分叉的宽度 */
-            border-top: 3px solid #333;
-            display: flex;
-            justify-content: space-between;
-            margin-top: -3px; /* 接上图片底部 */
-            position: relative;
-            z-index: 1;
         }
         
-        /* 根节点下来的垂直线 (需要伪元素) */
-        .tree-level-root::after {
-            content: '';
-            display: block;
-            width: 3px;
-            height: 30px;
-            background: #333;
+        /* 根节点下方的竖线 */
+        .root-line {
             position: absolute;
-            top: 200px; /* 根据图片高度调整，这里大约是预估位置 */
-        }
-
-        .connector-split .line-vertical {
-            width: 3px;
-            height: 100%;
-            background: #333;
+            bottom: -30px;
+            left: 50%;
+            width: 4px;
+            height: 30px;
+            background: #2c3e50;
+            transform: translateX(-2px);
+            z-index: 1;
         }
 
         /* 分支容器 */
-        .branches-wrapper {
+        .branches-container {
             display: flex;
             justify-content: center;
-            gap: 120px; /* 左右两列的间距 */
-            margin-top: -5px; /* 连接线微调 */
+            gap: 100px; /* 两列之间的间距 */
+            position: relative;
+            padding-top: 0;
         }
 
+        /* 横梁 (The Bridge) */
+        /* 宽度计算 = CardWidth(220) + Gap(100) = 320px */
+        /* 再加一些余量微调，确保对齐中心 */
+        .connector-bridge {
+            position: absolute;
+            top: 0; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 324px; /* 320 + border width adjustments */
+            height: 20px;
+            border-top: 4px solid #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            z-index: 1;
+        }
+
+        /* 横梁两侧向下的短竖线 */
+        .connector-bridge::before, .connector-bridge::after {
+            content: '';
+            width: 4px;
+            height: 100%;
+            background: #2c3e50;
+        }
+
+        /* 分支列 */
         .branch-col {
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
+            width: 220px; /* 与卡片同宽，保证居中对齐 */
         }
 
-        /* 箭头 */
-        .arrow-down {
-            width: 0; 
-            height: 0; 
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-top: 10px solid #333;
-            margin-bottom: 8px;
+        /* 左侧分支：顶部的箭头 */
+        .arrow-top-gap {
+            margin-top: 20px; /* 留出横梁下来的高度 */
+            margin-bottom: 5px;
+        }
+        
+        /* 右侧分支：New Branch 标签组 */
+        .new-branch-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 0; /* 紧接横梁 */
+            z-index: 12;
         }
 
-        .arrow-curved {
-            font-size: 28px;
-            color: #333;
-            margin: 5px 0;
-            font-weight: bold;
+        .line-segment {
+            width: 4px;
+            height: 15px;
+            background: #2c3e50;
         }
 
-        /* 黄色分支标签 */
         .branch-tag {
-            background: #faeab1;
-            padding: 4px 10px;
-            border: 2px solid #333;
+            background: #ffeaa7;
+            padding: 5px 12px;
+            border: 2px solid #2c3e50;
             font-weight: bold;
             font-size: 12px;
-            margin-bottom: 5px;
-            border-radius: 4px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
+        /* 纯CSS三角形箭头 */
+        .css-arrow-down {
+            width: 0; 
+            height: 0; 
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-top: 10px solid #2c3e50;
+        }
+
+        /* 步骤间的箭头图标 */
+        .step-arrow-icon {
+            color: #2c3e50;
+            font-size: 20px;
+            margin: 10px 0;
+            opacity: 0.8;
+        }
+
+        /* --- 虚线 SVG (Reflective Branching) --- */
+        .dashed-svg-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* 让鼠标事件穿透 */
+            z-index: 0; 
+        }
+
+        /* 手机适配 */
+        @media (max-width: 650px) {
+            .branches-container {
+                flex-direction: column;
+                gap: 50px;
+            }
+            .connector-bridge, .root-line, .dashed-svg-container, .line-segment {
+                display: none; /* 隐藏复杂连线 */
+            }
+            .arrow-top-gap { margin-top: 0; }
+        }
     </style>
 </head>
 
@@ -359,60 +417,79 @@
     </div>
 
     <!-- ======================================================= -->
-    <!--  新增区域：树状图 (Tree Visualization)                   -->
+    <!--  树状图可视化 (Final Tree Structure)                     -->
     <!-- ======================================================= -->
     <div class="task-tree-container">
         
-        <!-- 顶部：任务说明和标题 -->
-        <div class="task-instruction">
-            <i class="fas fa-user-circle" style="font-size: 1.5em;"></i> 
-            Open the door of the microwave oven
-        </div>
-        <div class="task-header-label">Task 1</div>
-
-        <!-- 1. 根节点 (Root Node) -->
-        <div class="tree-level-root">
-            <div class="t-card">
-                <span class="t-label">Initial State</span>
-                <!-- 图片占位符 -->
-                <img src="static/teaser.png" alt="Initial State">
+        <div class="task-header-group">
+            <div class="task-label">Task 1</div>
+            <div class="task-instruction">
+                <i class="fas fa-user-circle"></i> 
+                Open the door of the microwave oven
             </div>
         </div>
 
-        <!-- 2. 连接线 (Connectors) -->
-        <div class="connector-split">
-            <div class="line-vertical"></div> <!-- 左垂线 -->
-            <div class="line-vertical"></div> <!-- 右垂线 -->
+        <!-- 1. 根节点 -->
+        <div class="root-wrapper">
+            <div class="t-card">
+                <span class="t-label">Initial State</span>
+                <img src="static/teaser.png" alt="Initial State">
+            </div>
+            <div class="root-line"></div>
         </div>
 
-        <!-- 3. 分支区域 (Branches) -->
-        <div class="branches-wrapper">
+        <!-- 2. 分支系统 -->
+        <div class="branches-container">
             
-            <!-- 左分支 (Left Branch: Failure) -->
+            <!-- SVG 虚线连接 (从左侧失败卡片指向右侧 New Branch) -->
+            <!-- 坐标是硬编码的，基于 width=220 和 gap=100 计算得出，确保不同屏幕下相对位置稳定 -->
+            <svg class="dashed-svg-container" viewBox="0 0 600 400" preserveAspectRatio="none">
+                <!-- 
+                   M 110 130  (起点: 左侧卡片的右侧中心附近)
+                   C 180 130, 200 130, 340 40 (贝塞尔曲线控制点)
+                   (终点: 右侧标签的上方)
+                -->
+                <path d="M 230 150 C 260 150, 280 150, 310 50" 
+                      stroke="#7f8c8d" stroke-width="3" stroke-dasharray="8,5" fill="none" marker-end="url(#arrowhead)"/>
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#7f8c8d" />
+                    </marker>
+                </defs>
+            </svg>
+
+            <!-- 横梁连接线 -->
+            <div class="connector-bridge"></div>
+
+            <!-- 左分支 (Fail) -->
             <div class="branch-col">
-                <div class="arrow-down"></div>
+                <div class="arrow-top-gap css-arrow-down"></div>
+                
                 <div class="t-card fail">
                     <span class="t-label">Open the door</span>
-                    <!-- 视频占位符 -->
                     <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
                     <div class="status-badge"><i class="fas fa-times"></i></div>
                 </div>
             </div>
 
-            <!-- 右分支 (Right Branch: Success Sequence) -->
+            <!-- 右分支 (Success Sequence) -->
             <div class="branch-col">
-                <!-- 分支标签 -->
-                <div class="branch-tag">New Branch</div>
-                <div class="arrow-down"></div>
                 
+                <!-- New Branch 标签组 (垂直堆叠) -->
+                <div class="new-branch-group">
+                    <div class="line-segment"></div>
+                    <div class="branch-tag">New Branch</div>
+                    <div class="line-segment" style="height: 5px;"></div>
+                    <div class="css-arrow-down" style="margin-bottom: 5px;"></div>
+                </div>
+
                 <!-- 步骤 1 -->
                 <div class="t-card">
                     <span class="t-label">Pick up the tennis</span>
                     <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
                 </div>
 
-                <!-- 弯曲箭头 -->
-                <div class="arrow-curved">⤵</div>
+                <div class="step-arrow-icon"><i class="fas fa-arrow-down"></i></div>
 
                 <!-- 步骤 2 -->
                 <div class="t-card">
@@ -420,10 +497,9 @@
                     <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
                 </div>
 
-                <!-- 向下箭头 -->
-                <div class="arrow-curved">⬇</div>
+                <div class="step-arrow-icon"><i class="fas fa-arrow-down"></i></div>
 
-                <!-- 步骤 3 (成功) -->
+                <!-- 步骤 3 -->
                 <div class="t-card success">
                     <span class="t-label">Open the door</span>
                     <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
@@ -432,7 +508,6 @@
             </div>
         </div>
     </div>
-    <!-- ================= END TREE ================= -->
 
 </body>
 
