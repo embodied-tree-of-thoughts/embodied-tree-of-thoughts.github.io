@@ -206,13 +206,13 @@
             justify-content: center;
         }
         
-        /* 根节点下方的竖线 */
+        /* 根节点下方的竖线 (连接到桥) */
         .root-line {
             position: absolute;
-            bottom: -30px;
+            bottom: -32px; /* 延伸多一点以接触横梁 */
             left: 50%;
             width: 4px;
-            height: 30px;
+            height: 32px;
             background: #2c3e50;
             transform: translateX(-2px);
             z-index: 1;
@@ -227,25 +227,35 @@
             padding-top: 0;
         }
 
-        /* 横梁 (The Bridge) */
+        /* 
+           横梁 (The Bridge) - 修复连接问题
+           宽度计算:
+           左列宽 220, 右列宽 220, 间距 100.
+           左中心 = 110, 右中心 = 110.
+           中心到中心距离 = 110 + 100 + 110 = 320px.
+           我们将宽度设为 320px + 4px (border) = 324px 确保覆盖
+        */
         .connector-bridge {
             position: absolute;
             top: 0; 
             left: 50%;
-            transform: translateX(-50%);
-            width: 324px;
+            transform: translateX(-100%);
+            width: 324px; /* 稍微宽一点确保盖住垂线 */
             height: 20px;
             border-top: 4px solid #2c3e50;
             display: flex;
             justify-content: space-between;
-            z-index: 2; /* 确保在SVG之上，但在卡片之下 */
+            z-index: 2; /* 在卡片之下，但在SVG之上 */
         }
 
+        /* 横梁两侧向下的短竖线 */
         .connector-bridge::before, .connector-bridge::after {
             content: '';
             width: 4px;
-            height: 100%;
+            height: 24px; /* 稍微加长，确保插入下方箭头 */
             background: #2c3e50;
+            position: relative;
+            top: -4px; /* 修正 border-top 的高度偏移 */
         }
 
         /* 分支列 */
@@ -259,7 +269,7 @@
 
         /* 左侧分支：顶部的箭头 */
         .arrow-top-gap {
-            margin-top: 20px; 
+            margin-top: 15px; /* 调整间距，让上面的竖线能接上 */
             margin-bottom: 5px;
         }
         
@@ -268,13 +278,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 0; 
+            margin-top: -4px; /* 向上提一点，紧接横梁 */
             z-index: 12;
         }
 
         .line-segment {
             width: 4px;
-            height: 15px;
+            height: 20px;
             background: #2c3e50;
         }
 
@@ -327,9 +337,9 @@
             }
             .arrow-top-gap { margin-top: 0; }
             .control-btn-container {
+                left: auto;
                 right: 10px;
                 top: 10px;
-                transform: none;
             }
         }
 
@@ -413,7 +423,6 @@
         /* 4. 逐步显示动画与控制按钮 (Step Reveal)    */
         /* ========================================= */
         
-        /* 默认隐藏状态：透明，且稍微向下偏移，不可点击 */
         .step-hidden {
             opacity: 0;
             transform: translateY(20px);
@@ -421,19 +430,21 @@
             pointer-events: none;      
         }
         
-        /* 激活状态：完全显示，位置复原 */
         .step-visible {
             opacity: 1;
             transform: translateY(0);
             pointer-events: auto;
         }
         
-        /* 右侧控制按钮样式 */
+        /* 
+           修改：控制按钮位置移至左上角 
+        */
         .control-btn-container {
             position: absolute;
-            right: -80px; 
-            top: 50%;
-            transform: translateY(-50%);
+            left: 20px;    /* 改为左侧 */
+            top: 20px;     /* 改为顶部 */
+            right: auto;   /* 清除右侧定位 */
+            transform: none; /* 清除垂直居中偏移 */
             z-index: 100;
         }
         
@@ -444,13 +455,14 @@
             background-color: #2c3e50;
             color: white;
             border: none;
-            font-size: 20px;
+            font-size: 18px; /* 稍微调小图标大小以适应三角形 */
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding-left: 5px; /* 三角形视觉修正，让它看起来居中 */
         }
         
         .next-step-btn:hover {
@@ -551,10 +563,10 @@
     <!-- ======================================================= -->
     <div class="task-tree-container">
         
-        <!-- 新增：右侧控制按钮 -->
+        <!-- 修改：按钮移到左侧，图标改为 Play 三角形 -->
         <div class="control-btn-container">
             <button class="next-step-btn" onclick="revealNextStep()">
-                <i class="fas fa-chevron-right"></i>
+                <i class="fas fa-play"></i>
             </button>
         </div>
 
@@ -580,7 +592,6 @@
             
             <!-- 
                Step 1 (Delay): 虚线 SVG
-               data-step="1", data-delay="1000" -> 点击第一次后，延迟1秒显示
             -->
             <svg class="dashed-svg-container step-hidden" data-step="1" data-delay="1000" viewBox="0 0 540 400" preserveAspectRatio="xMidYMin meet">
                 <defs>
@@ -621,7 +632,6 @@
                 
                 <!-- 
                    Step 1 (Delay): New Branch 标签
-                   data-step="1", data-delay="1000"
                 -->
                 <div class="new-branch-group step-hidden" data-step="1" data-delay="1000">
                     <div class="line-segment"></div>
@@ -728,6 +738,7 @@
             // 改为重置按钮
             btn.innerHTML = '<i class="fas fa-redo"></i>';
             btn.onclick = resetSteps;
+            btn.style.paddingLeft = "0"; // 重置时取消padding
         }
     }
 
@@ -740,8 +751,9 @@
         });
         
         const btn = document.querySelector('.next-step-btn');
-        btn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        btn.innerHTML = '<i class="fas fa-play"></i>';
         btn.onclick = revealNextStep;
+        btn.style.paddingLeft = "5px"; // 恢复play图标的视觉居中
     }
 </script>
 </body>
