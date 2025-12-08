@@ -11,7 +11,7 @@
     
     <style>
         /* ========================================= */
-        /* 1. 基础页面样式 (保持原样)                 */
+        /* 1. 基础页面样式                           */
         /* ========================================= */
         body {
             font-family: 'Noto Sans', sans-serif;
@@ -228,22 +228,19 @@
         }
 
         /* 横梁 (The Bridge) */
-        /* 宽度计算 = CardWidth(220) + Gap(100) = 320px */
-        /* 再加一些余量微调，确保对齐中心 */
         .connector-bridge {
             position: absolute;
             top: 0; 
             left: 50%;
             transform: translateX(-50%);
-            width: 324px; /* 320 + border width adjustments */
+            width: 324px;
             height: 20px;
             border-top: 4px solid #2c3e50;
             display: flex;
             justify-content: space-between;
-            z-index: 1;
+            z-index: 2; /* 确保在SVG之上，但在卡片之下 */
         }
 
-        /* 横梁两侧向下的短竖线 */
         .connector-bridge::before, .connector-bridge::after {
             content: '';
             width: 4px;
@@ -257,12 +254,12 @@
             flex-direction: column;
             align-items: center;
             position: relative;
-            width: 220px; /* 与卡片同宽，保证居中对齐 */
+            width: 220px; 
         }
 
         /* 左侧分支：顶部的箭头 */
         .arrow-top-gap {
-            margin-top: 20px; /* 留出横梁下来的高度 */
+            margin-top: 20px; 
             margin-bottom: 5px;
         }
         
@@ -271,7 +268,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 0; /* 紧接横梁 */
+            margin-top: 0; 
             z-index: 12;
         }
 
@@ -300,7 +297,6 @@
             border-top: 10px solid #2c3e50;
         }
 
-        /* 步骤间的箭头图标 */
         .step-arrow-icon {
             color: #2c3e50;
             font-size: 20px;
@@ -309,26 +305,15 @@
         }
 
         /* --- 虚线 SVG (Reflective Branching) --- */
-        /* --- 虚线 SVG (Reflective Branching) --- */
         .dashed-svg-container {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* 让鼠标事件穿透 */
-            z-index: 1; /* 放在底层，但高于背景 */
-            overflow: visible; /* 允许线条在极端情况下超出一点 */
-        }
-        
-        /* 确保横梁(Bridge)和竖线也在合适的层级 */
-        .connector-bridge, .root-line {
-            z-index: 2;
-        }
-        
-        /* 卡片层级最高，遮盖住穿过下方的线（如果有的话） */
-        .t-card, .new-branch-group {
-            z-index: 10;
+            pointer-events: none; 
+            z-index: 1; /* 最底层 */
+            overflow: visible; 
         }
 
         /* 手机适配 */
@@ -338,36 +323,38 @@
                 gap: 50px;
             }
             .connector-bridge, .root-line, .dashed-svg-container, .line-segment {
-                display: none; /* 隐藏复杂连线 */
+                display: none; 
             }
             .arrow-top-gap { margin-top: 0; }
+            .control-btn-container {
+                right: 10px;
+                top: 10px;
+                transform: none;
+            }
         }
-                /* ========================================= */
+
+        /* ========================================= */
         /* 3. 视频侧边切换按钮样式 (Side Toolbar)     */
         /* ========================================= */
         
-        /* 新增：包裹视频和按钮的容器，用于定位 */
         .media-wrapper {
             position: relative;
             width: 100%;
-            /* 确保视频仍然占满卡片 */
             display: flex; 
             align-items: center; 
         }
         
-        /* 侧边工具栏容器 */
         .side-toolbar {
             position: absolute;
-            right: -40px; /* 移到卡片外部右侧 */
+            right: -40px; 
             top: 50%;
-            transform: translateY(-50%); /* 垂直居中 */
+            transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            gap: 8px; /* 按钮之间的间距 */
+            gap: 8px; 
             z-index: 20;
         }
         
-        /* 按钮基础样式 */
         .view-btn {
             width: 28px;
             height: 28px;
@@ -387,15 +374,12 @@
             transform: scale(1.1);
         }
         
-        /* 选中状态（可选） */
         .view-btn.active {
             background-color: #f0f0f0;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        /* --- 根据你的图片定制的三种颜色 --- */
-        
-        /* 1. 蓝色按钮 (比如 RGB) */
+        /* 1. 蓝色按钮 (World Model) */
         .btn-blue {
             border-color: #3498db;
             color: #3498db;
@@ -405,7 +389,7 @@
             color: white;
         }
         
-        /* 2. 黄色按钮 (比如 Depth/Sim) */
+        /* 2. 黄色按钮 (Raw Obs) */
         .btn-yellow {
             border-color: #f1c40f;
             color: #f1c40f;
@@ -415,7 +399,7 @@
             color: white;
         }
         
-        /* 3. 深灰/黑色按钮 (比如 Mask/Seg) */
+        /* 3. 深灰/黑色按钮 (Human/Seg) */
         .btn-dark {
             border-color: #34495e;
             color: #34495e;
@@ -424,6 +408,60 @@
             background: #34495e;
             color: white;
         }
+
+        /* ========================================= */
+        /* 4. 逐步显示动画与控制按钮 (Step Reveal)    */
+        /* ========================================= */
+        
+        /* 默认隐藏状态：透明，且稍微向下偏移，不可点击 */
+        .step-hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease; 
+            pointer-events: none;      
+        }
+        
+        /* 激活状态：完全显示，位置复原 */
+        .step-visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        
+        /* 右侧控制按钮样式 */
+        .control-btn-container {
+            position: absolute;
+            right: -80px; 
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+        }
+        
+        .next-step-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .next-step-btn:hover {
+            background-color: #34495e;
+            transform: scale(1.1);
+        }
+        
+        .next-step-btn:active {
+            transform: scale(0.95);
+        }
+
     </style>
 </head>
 
@@ -491,7 +529,6 @@
         <img src="static/etot.png" alt="Framework of the Embodied Tree of Thoughts">
     </div>
 
-
     <p style="text-align: justify; padding: 0 20px; max-width: 900px; margin: 0 auto;">
         Given a task instruction, the system first reconstructs the real scene into an interactive 3D digital twin. It
         then constructs a world-model-grounded planning tree through <em>Priori Branching</em> and <em>Reflective
@@ -500,7 +537,6 @@
         of the planning tree, the system identifies a feasible plan, which is finally executed on the real robot in a
         closed-loop manner with visual feedback and re-planning.
     </p>
-
 
     <div class="img-block">
         <img src="static/task1.png" alt="Results for Short-horizon Tasks">
@@ -515,6 +551,13 @@
     <!-- ======================================================= -->
     <div class="task-tree-container">
         
+        <!-- 新增：右侧控制按钮 -->
+        <div class="control-btn-container">
+            <button class="next-step-btn" onclick="revealNextStep()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
         <div class="task-header-group">
             <div class="task-label">Task 1</div>
             <div class="task-instruction">
@@ -523,7 +566,7 @@
             </div>
         </div>
 
-        <!-- 1. 根节点 -->
+        <!-- 0. 根节点 (默认显示) -->
         <div class="root-wrapper">
             <div class="t-card">
                 <span class="t-label">Initial State</span>
@@ -535,214 +578,170 @@
         <!-- 2. 分支系统 -->
         <div class="branches-container">
             
-            <!-- SVG 虚线连接 (直角折线: 左侧底部 -> 下 -> 右 -> 上 -> 右 -> New Branch) -->
-            <!-- viewBox 设为 0 0 540 400 以匹配 flex 布局的像素逻辑 (左列220 + 间距100 + 右列220 = 540) -->
-            <svg class="dashed-svg-container" viewBox="0 0 540 400" preserveAspectRatio="xMidYMin meet">
-                
+            <!-- 
+               Step 1 (Delay): 虚线 SVG
+               data-step="1", data-delay="1000" -> 点击第一次后，延迟1秒显示
+            -->
+            <svg class="dashed-svg-container step-hidden" data-step="1" data-delay="1000" viewBox="0 0 540 400" preserveAspectRatio="xMidYMin meet">
                 <defs>
-                    <!-- 定义箭头样式 -->
                     <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
                         <polygon points="0 0, 10 3.5, 0 7" fill="#7f8c8d" />
                     </marker>
                 </defs>
-
-                <!-- 
-                    路径解释 (d属性):
-                    M 110 185 : 起点 [左列中心 x=110, 左卡片底部约 y=185]
-                    L 110 230 : 向下画线 [垂直到 y=230, 留出空隙]
-                    L 270 230 : 向右画线 [水平到间距中心 x=270 (220宽 + 50半间距)]
-                    L 270 32  : 向上画线 [垂直回到顶部 New Branch 标签的高度 y=32]
-                    L 375 32  : 向右连接 [水平连接到 New Branch 标签左侧]
-                -->
-                <path d="M 110 185 
-                         L 110 230 
-                         L 270 230 
-                         L 270 32 
-                         L 375 32" 
-                      stroke="#7f8c8d" 
-                      stroke-width="3" 
-                      stroke-dasharray="8,5" 
-                      fill="none" 
-                      stroke-linejoin="round"
+                <path d="M 110 185 L 110 230 L 270 230 L 270 32 L 375 32" 
+                      stroke="#7f8c8d" stroke-width="3" stroke-dasharray="8,5" fill="none" stroke-linejoin="round"
                       marker-end="url(#arrowhead)"/>
             </svg>
 
-            <!-- 横梁连接线 -->
-            <div class="connector-bridge"></div>
+            <!-- Step 1 (Immediate): 横梁连接线 -->
+            <div class="connector-bridge step-hidden" data-step="1"></div>
 
             <!-- 左分支 (Fail) -->
             <div class="branch-col">
-                <div class="arrow-top-gap css-arrow-down"></div>
+                <!-- Step 1 (Immediate): 箭头 -->
+                <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
                 
-                <!-- 这是一个修改后的卡片示例 -->
-                <div class="t-card">
+                <!-- Step 1 (Immediate): 失败卡片 -->
+                <div class="t-card fail step-hidden" data-step="1">
                     <span class="t-label">Open the door</span>
-                    
-                    <!-- 新增 wrapper -->
                     <div class="media-wrapper">
-
                         <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
-                        
-                        <!-- 右侧按钮组 -->
                         <div class="side-toolbar">
-                            <!-- 按钮 1: Blue -->
-                            <!-- data-src 属性存放你想切换的视频路径 -->
-                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/teaser.mp4')">
-                                <i class="fas fa-globe"></i>
-                            </div>
-                            
-                            <!-- 按钮 2: Yellow -->
-                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/teaser.mp4')">
-                                <i class="fas fa-camera"></i>
-                            </div>
-                            
-                            <!-- 按钮 3: Dark -->
-                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/teaser.mp4')">
-                                <i class="fas fa-user"></i>
-                            </div>
+                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/teaser.mp4')" title="World Model"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/teaser.mp4')" title="Raw Observation"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/teaser.mp4')" title="Human/Seg"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
+                    <div class="status-badge"><i class="fas fa-times"></i></div>
                 </div>
             </div>
 
             <!-- 右分支 (Success Sequence) -->
             <div class="branch-col">
                 
-                <!-- New Branch 标签组 (垂直堆叠) -->
-                <div class="new-branch-group">
+                <!-- 
+                   Step 1 (Delay): New Branch 标签
+                   data-step="1", data-delay="1000"
+                -->
+                <div class="new-branch-group step-hidden" data-step="1" data-delay="1000">
                     <div class="line-segment"></div>
                     <div class="branch-tag">New Branch</div>
                     <div class="line-segment" style="height: 5px;"></div>
                     <div class="css-arrow-down" style="margin-bottom: 5px;"></div>
                 </div>
 
-                <!-- 步骤 1 -->
-                <!-- 这是一个修改后的卡片示例 -->
-                <div class="t-card">
+                <!-- Step 2: Pick up tennis -->
+                <div class="t-card step-hidden" data-step="2">
                     <span class="t-label">Pick up the tennis</span>
-                    
-                    <!-- 新增 wrapper -->
                     <div class="media-wrapper">
-                        <!-- 给 video 加个 class 或 id 方便脚本查找，这里其实只要是 wrapper 内的 video 即可 -->
                         <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
-                        
-                        <!-- 右侧按钮组 -->
                         <div class="side-toolbar">
-                            <!-- 按钮 1: Blue -->
-                            <!-- data-src 属性存放你想切换的视频路径 -->
-                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/teaser.mp4')">
-                                <i class="fas fa-globe"></i>
-                            </div>
-                            
-                            <!-- 按钮 2: Yellow -->
-                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/teaser.mp4')">
-                                <i class="fas fa-camera"></i>
-                            </div>
-                            
-                            <!-- 按钮 3: Dark -->
-                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/teaser.mp4')">
-                                <i class="fas fa-user"></i>
-                            </div>
+                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/teaser.mp4')" title="World Model"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/teaser.mp4')" title="Raw Observation"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/teaser.mp4')" title="Human/Seg"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="step-arrow-icon"><i class="fas fa-arrow-down"></i></div>
+                <!-- Step 3: Arrow + Put on desk -->
+                <div class="step-arrow-icon step-hidden" data-step="3"><i class="fas fa-arrow-down"></i></div>
 
-                <!-- 步骤 2 -->
-                <!-- 这是一个修改后的卡片示例 -->
-                <div class="t-card">
+                <div class="t-card step-hidden" data-step="3">
                     <span class="t-label">Put on the desk</span>
-                    
-                    <!-- 新增 wrapper -->
                     <div class="media-wrapper">
-                        <!-- 给 video 加个 class 或 id 方便脚本查找，这里其实只要是 wrapper 内的 video 即可 -->
                         <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
-                        
-                        <!-- 右侧按钮组 -->
                         <div class="side-toolbar">
-                            <!-- 按钮 1: Blue -->
-                            <!-- data-src 属性存放你想切换的视频路径 -->
-                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/teaser.mp4')">
-                                <i class="fas fa-globe"></i>
-                            </div>
-                            
-                            <!-- 按钮 2: Yellow -->
-                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/teaser.mp4')">
-                                <i class="fas fa-camera"></i>
-                            </div>
-                            
-                            <!-- 按钮 3: Dark -->
-                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/teaser.mp4')">
-                                <i class="fas fa-user"></i>
-                            </div>
+                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/teaser.mp4')" title="World Model"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/teaser.mp4')" title="Raw Observation"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/teaser.mp4')" title="Human/Seg"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="step-arrow-icon"><i class="fas fa-arrow-down"></i></div>
+                <!-- Step 4: Arrow + Open door -->
+                <div class="step-arrow-icon step-hidden" data-step="4"><i class="fas fa-arrow-down"></i></div>
 
-                <!-- 步骤 3 -->
-                <!-- 这是一个修改后的卡片示例 -->
-                <div class="t-card">
+                <div class="t-card success step-hidden" data-step="4">
                     <span class="t-label">Open the door</span>
-                    
-                    <!-- 新增 wrapper -->
                     <div class="media-wrapper">
-                        <!-- 给 video 加个 class 或 id 方便脚本查找，这里其实只要是 wrapper 内的 video 即可 -->
                         <video src="static/teaser.mp4" autoplay loop muted playsinline></video>
-                        
-                        <!-- 右侧按钮组 -->
                         <div class="side-toolbar">
-                            <!-- 按钮 1: Blue -->
-                            <!-- data-src 属性存放你想切换的视频路径 -->
-                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/teaser.mp4')">
-                                <i class="fas fa-globe"></i>
-                            </div>
-                            
-                            <!-- 按钮 2: Yellow -->
-                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/teaser.mp4')">
-                                <i class="fas fa-camera"></i>
-                            </div>
-                            
-                            <!-- 按钮 3: Dark -->
-                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/teaser.mp4')">
-                                <i class="fas fa-user"></i>
-                            </div>
+                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/teaser.mp4')" title="World Model"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/teaser.mp4')" title="Raw Observation"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/teaser.mp4')" title="Human/Seg"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
+                    <div class="status-badge"><i class="fas fa-check"></i></div>
                 </div>
             </div>
         </div>
     </div>
+
 <script>
+    // --- 视频切换逻辑 ---
     function changeVideo(btnElement, videoSource) {
-        // 1. 找到当前按钮所在的 wrapper
         const wrapper = btnElement.closest('.media-wrapper');
-        
-        // 2. 找到 wrapper 里的 video 标签
         const video = wrapper.querySelector('video');
         
-        // 3. 切换视频源 (如果源不同才切换，避免闪烁)
-        // 获取当前 src 的相对/绝对路径比较有点麻烦，这里直接赋值即可
-        // 为了演示效果，即使源一样我们也重载一下，或者你可以打印 console
         if (!video.src.includes(videoSource)) {
             video.src = videoSource;
-            video.play(); // 确保切换后自动播放
+            video.play();
         } else {
             console.log("Already playing this video source");
-            // 如果为了演示“点击有效”，可以让视频重头播放：
-            // video.currentTime = 0;
-            // video.play();
         }
 
-        // 4. 更新按钮的高亮状态 (UI 交互)
-        // 找到同组的所有按钮
         const allBtns = btnElement.parentElement.querySelectorAll('.view-btn');
-        // 移除所有 active
         allBtns.forEach(btn => btn.classList.remove('active'));
-        // 给当前点击的按钮添加 active
         btnElement.classList.add('active');
+    }
+
+    // --- 步骤逐步显示逻辑 ---
+    let currentStep = 0; // 当前步数
+    const totalSteps = 4; // 总步数
+
+    function revealNextStep() {
+        if (currentStep >= totalSteps) return;
+
+        currentStep++;
+
+        // 查找所有属于当前步骤的元素
+        const elements = document.querySelectorAll(`.step-hidden[data-step="${currentStep}"]`);
+        
+        elements.forEach(el => {
+            // 检查是否有延迟
+            const delayTime = el.getAttribute('data-delay') || 0;
+            
+            if (delayTime > 0) {
+                // 有延迟的元素 (如 New Branch)
+                setTimeout(() => {
+                    el.classList.add('step-visible');
+                }, delayTime);
+            } else {
+                // 立即显示的元素 (如左侧卡片)
+                el.classList.add('step-visible');
+            }
+        });
+
+        // 按钮状态管理
+        if (currentStep === totalSteps) {
+            const btn = document.querySelector('.next-step-btn');
+            // 改为重置按钮
+            btn.innerHTML = '<i class="fas fa-redo"></i>';
+            btn.onclick = resetSteps;
+        }
+    }
+
+    // 重置逻辑
+    function resetSteps() {
+        currentStep = 0;
+        const allHidden = document.querySelectorAll('.step-hidden');
+        allHidden.forEach(el => {
+            el.classList.remove('step-visible');
+        });
+        
+        const btn = document.querySelector('.next-step-btn');
+        btn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        btn.onclick = revealNextStep;
     }
 </script>
 </body>
