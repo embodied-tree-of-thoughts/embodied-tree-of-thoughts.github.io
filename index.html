@@ -309,6 +309,7 @@
         }
 
         /* --- 虚线 SVG (Reflective Branching) --- */
+        /* --- 虚线 SVG (Reflective Branching) --- */
         .dashed-svg-container {
             position: absolute;
             top: 0;
@@ -316,7 +317,18 @@
             width: 100%;
             height: 100%;
             pointer-events: none; /* 让鼠标事件穿透 */
-            z-index: 0; 
+            z-index: 1; /* 放在底层，但高于背景 */
+            overflow: visible; /* 允许线条在极端情况下超出一点 */
+        }
+        
+        /* 确保横梁(Bridge)和竖线也在合适的层级 */
+        .connector-bridge, .root-line {
+            z-index: 2;
+        }
+        
+        /* 卡片层级最高，遮盖住穿过下方的线（如果有的话） */
+        .t-card, .new-branch-group {
+            z-index: 10;
         }
 
         /* 手机适配 */
@@ -441,21 +453,36 @@
         <!-- 2. 分支系统 -->
         <div class="branches-container">
             
-            <!-- SVG 虚线连接 (从左侧失败卡片指向右侧 New Branch) -->
-            <svg class="dashed-svg-container" viewBox="0 0 600 400" preserveAspectRatio="xMidYMin slice">
+            <!-- SVG 虚线连接 (直角折线: 左侧底部 -> 下 -> 右 -> 上 -> 右 -> New Branch) -->
+            <!-- viewBox 设为 0 0 540 400 以匹配 flex 布局的像素逻辑 (左列220 + 间距100 + 右列220 = 540) -->
+            <svg class="dashed-svg-container" viewBox="0 0 540 400" preserveAspectRatio="xMidYMin meet">
+                
                 <defs>
-                    <marker id="arrowhead" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
-                        <polygon points="0 0, 12 4, 0 8" fill="#7f8c8d" />
+                    <!-- 定义箭头样式 -->
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#7f8c8d" />
                     </marker>
                 </defs>
+
                 <!-- 
-                   路径说明 (基于 viewBox 600x400 的估算坐标):
-                   M 150 230 : 起点 (左侧卡片的底部中心位置)
-                   C 150 310, 300 150 : 贝塞尔曲线控制点 (先向下延伸，再向右上弯曲)
-                   360 45    : 终点 (右侧 "New Branch" 标签的左侧位置)
+                    路径解释 (d属性):
+                    M 110 185 : 起点 [左列中心 x=110, 左卡片底部约 y=185]
+                    L 110 230 : 向下画线 [垂直到 y=230, 留出空隙]
+                    L 270 230 : 向右画线 [水平到间距中心 x=270 (220宽 + 50半间距)]
+                    L 270 32  : 向上画线 [垂直回到顶部 New Branch 标签的高度 y=32]
+                    L 375 32  : 向右连接 [水平连接到 New Branch 标签左侧]
                 -->
-                <path d="M 150 230 C 150 310, 300 150, 360 45" 
-                      stroke="#7f8c8d" stroke-width="3" stroke-dasharray="8,5" fill="none" marker-end="url(#arrowhead)"/>
+                <path d="M 110 185 
+                         L 110 230 
+                         L 270 230 
+                         L 270 32 
+                         L 375 32" 
+                      stroke="#7f8c8d" 
+                      stroke-width="3" 
+                      stroke-dasharray="8,5" 
+                      fill="none" 
+                      stroke-linejoin="round"
+                      marker-end="url(#arrowhead)"/>
             </svg>
 
             <!-- 横梁连接线 -->
