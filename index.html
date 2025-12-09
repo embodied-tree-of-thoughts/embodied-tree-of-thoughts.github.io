@@ -1,3 +1,14 @@
+这是一个基于现有代码的完整更新版本。
+
+主要修改点如下：
+
+1.  **HTML结构**：新增了 `id="task2"` 的容器。Task 2 的结构是垂直堆叠两层（Initial -\> Pick up），然后再分叉。
+2.  **CSS调整**：增加了一个通用类 `.node-stack`，用于让中间节点（Pick up the pen）能够像根节点一样垂直居中排列，同时连接上下。
+3.  **JS逻辑重构**：将原先的全局变量 `currentStep` 改为**基于容器的局部状态管理**。现在每个 Task 都有独立的控制按钮和进度记录，互不干扰。
+
+你可以直接复制以下代码替换原文件内容。
+
+```html
 <!DOCTYPE html>
 <html>
 
@@ -5,7 +16,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Embodied Tree of Thoughts</title>
-    <!-- 字体和图标库 -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
@@ -23,10 +33,7 @@
             color: #333;
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 0.3em;
-        }
+        h1 { text-align: center; margin-bottom: 0.3em; }
 
         .authors {
             text-align: center;
@@ -103,12 +110,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* 限制宽度以保证对齐 */
             max-width: 850px; 
-            overflow: visible; /* 允许虚线溢出 */
+            overflow: visible; 
         }
 
-        /* 右上角 Task 标题 */
+        /* Task 标题 */
         .task-header-group {
             position: absolute;
             top: 20px;
@@ -143,7 +149,7 @@
             border: 3px solid #e0e0e0;
             border-radius: 12px;
             padding: 5px;
-            width: 220px; /* 固定宽度：对齐的关键 */
+            width: 220px; 
             position: relative;
             box-shadow: 0 6px 12px rgba(0,0,0,0.08);
             z-index: 10;
@@ -157,7 +163,6 @@
             background: #000;
         }
 
-        /* 浮动标签 (Initial State 等) */
         .t-label {
             position: absolute;
             top: -14px;
@@ -175,7 +180,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* 状态样式 */
         .t-card.fail { border-color: #e74c3c; }
         .t-card.success { border-color: #27ae60; }
 
@@ -198,67 +202,57 @@
 
         /* --- 结构与连线 (Layout & Lines) --- */
         
-        /* 根节点区域 */
-        .root-wrapper {
+        /* 根节点/中间堆叠节点区域 */
+        .root-wrapper, .node-stack {
             position: relative;
-            margin-bottom: 30px; 
+            margin-bottom: 35px; 
             display: flex;
             justify-content: center;
         }
         
-        /* 根节点下方的竖线 (连接到桥) */
+        /* 竖线 (连接到下方) */
         .root-line {
             position: absolute;
-            bottom: -32px; /* 延伸多一点以接触横梁 */
+            bottom: -37px; 
             left: 50%;
             width: 4px;
-            height: 32px;
+            height: 37px; 
             background: #2c3e50;
             transform: translateX(-2px);
             z-index: 1;
         }
 
-        /* 分支容器 */
         .branches-container {
             display: flex;
             justify-content: center;
-            gap: 100px; /* 两列之间的间距 */
+            gap: 100px;
             position: relative;
             padding-top: 0;
         }
 
-        /* 
-           横梁 (The Bridge) - 修复连接问题
-           宽度计算:
-           左列宽 220, 右列宽 220, 间距 100.
-           左中心 = 110, 右中心 = 110.
-           中心到中心距离 = 110 + 100 + 110 = 320px.
-           我们将宽度设为 320px + 4px (border) = 324px 确保覆盖
-        */
+        /* 横梁 (The Bridge) */
         .connector-bridge {
             position: absolute;
             top: 0; 
             left: 20%;
             transform: translateX(-100%);
-            width: 324px; /* 稍微宽一点确保盖住垂线 */
+            width: 324px;
             height: 20px;
             border-top: 4px solid #2c3e50;
             display: flex;
             justify-content: space-between;
-            z-index: 2; /* 在卡片之下，但在SVG之上 */
+            z-index: 2;
         }
 
-        /* 横梁两侧向下的短竖线 */
         .connector-bridge::before, .connector-bridge::after {
             content: '';
             width: 4px;
-            height: 24px; /* 稍微加长，确保插入下方箭头 */
+            height: 24px;
             background: #2c3e50;
             position: relative;
-            top: -4px; /* 修正 border-top 的高度偏移 */
+            top: -4px;
         }
 
-        /* 分支列 */
         .branch-col {
             display: flex;
             flex-direction: column;
@@ -267,18 +261,16 @@
             width: 220px; 
         }
 
-        /* 左侧分支：顶部的箭头 */
         .arrow-top-gap {
-            margin-top: 15px; /* 调整间距，让上面的竖线能接上 */
+            margin-top: 15px;
             margin-bottom: 5px;
         }
         
-        /* 右侧分支：New Branch 标签组 */
         .new-branch-group {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: -4px; /* 向上提一点，紧接横梁 */
+            margin-top: -4px;
             z-index: 12;
         }
 
@@ -298,13 +290,13 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* 纯CSS三角形箭头 */
         .css-arrow-down {
             width: 0; 
             height: 0; 
             border-left: 7px solid transparent;
             border-right: 7px solid transparent;
             border-top: 10px solid #2c3e50;
+            margin-bottom: 5px;
         }
 
         .step-arrow-icon {
@@ -314,7 +306,6 @@
             opacity: 0.8;
         }
 
-        /* --- 虚线 SVG (Reflective Branching) --- */
         .dashed-svg-container {
             position: absolute;
             top: 0;
@@ -322,11 +313,10 @@
             width: 100%;
             height: 100%;
             pointer-events: none; 
-            z-index: 1; /* 最底层 */
+            z-index: 1;
             overflow: visible; 
         }
 
-        /* 手机适配 */
         @media (max-width: 650px) {
             .branches-container {
                 flex-direction: column;
@@ -344,7 +334,7 @@
         }
 
         /* ========================================= */
-        /* 3. 视频侧边切换按钮样式 (Side Toolbar)     */
+        /* 3. 视频侧边切换按钮样式 (Side Toolbar)      */
         /* ========================================= */
         
         .media-wrapper {
@@ -380,47 +370,24 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        .view-btn:hover {
-            transform: scale(1.1);
-        }
+        .view-btn:hover { transform: scale(1.1); }
         
         .view-btn.active {
             background-color: #f0f0f0;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        /* 1. 蓝色按钮 (World Model) */
-        .btn-blue {
-            border-color: #3498db;
-            color: #3498db;
-        }
-        .btn-blue:hover, .btn-blue.active {
-            background: #3498db;
-            color: white;
-        }
+        .btn-blue { border-color: #3498db; color: #3498db; }
+        .btn-blue:hover, .btn-blue.active { background: #3498db; color: white; }
         
-        /* 2. 黄色按钮 (Raw Obs) */
-        .btn-yellow {
-            border-color: #f1c40f;
-            color: #f1c40f;
-        }
-        .btn-yellow:hover, .btn-yellow.active {
-            background: #f1c40f;
-            color: white;
-        }
+        .btn-yellow { border-color: #f1c40f; color: #f1c40f; }
+        .btn-yellow:hover, .btn-yellow.active { background: #f1c40f; color: white; }
         
-        /* 3. 深灰/黑色按钮 (Human/Seg) */
-        .btn-dark {
-            border-color: #34495e;
-            color: #34495e;
-        }
-        .btn-dark:hover, .btn-dark.active {
-            background: #34495e;
-            color: white;
-        }
+        .btn-dark { border-color: #34495e; color: #34495e; }
+        .btn-dark:hover, .btn-dark.active { background: #34495e; color: white; }
 
         /* ========================================= */
-        /* 4. 逐步显示动画与控制按钮 (Step Reveal)    */
+        /* 4. 逐步显示动画与控制按钮 (Step Reveal)     */
         /* ========================================= */
         
         .step-hidden {
@@ -436,15 +403,10 @@
             pointer-events: auto;
         }
         
-        /* 
-           修改：控制按钮位置移至左上角 
-        */
         .control-btn-container {
             position: absolute;
-            left: 20px;    /* 改为左侧 */
-            top: 20px;     /* 改为顶部 */
-            right: auto;   /* 清除右侧定位 */
-            transform: none; /* 清除垂直居中偏移 */
+            left: 20px;    
+            top: 20px;     
             z-index: 100;
         }
         
@@ -455,14 +417,14 @@
             background-color: #2c3e50;
             color: white;
             border: none;
-            font-size: 18px; /* 稍微调小图标大小以适应三角形 */
+            font-size: 18px; 
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding-left: 5px; /* 三角形视觉修正，让它看起来居中 */
+            padding-left: 5px; 
         }
         
         .next-step-btn:hover {
@@ -497,14 +459,12 @@
                 <span>Project Website</span>
             </a>
         </span>
-
         <span class="link-block">
             <a target="_blank" href="https://github.com/HEA1OR/Embodied-Tree-of-Thoughts/tree/main" title="ArXiv Paper">
                 <span class="icon"><i class="fas fa-file-pdf"></i></span>
                 <span>ArXiv</span>
             </a>
         </span>
-
         <span class="link-block">
             <a target="_blank" href="https://github.com/HEA1OR/Embodied-Tree-of-Thoughts/tree/main" title="Code Repository">
                 <span class="icon"><i class="fab fa-github"></i></span>
@@ -551,14 +511,10 @@
     </p>
 
 
-    <!-- ======================================================= -->
-    <!--  树状图可视化 (Final Tree Structure)                     -->
-    <!-- ======================================================= -->
-    <div class="task-tree-container">
+    <div class="task-tree-container" id="task1" data-current-step="0" data-max-steps="4">
         
-        <!-- 修改：按钮移到左侧，图标改为 Play 三角形 -->
         <div class="control-btn-container">
-            <button class="next-step-btn" onclick="revealNextStep()">
+            <button class="next-step-btn" onclick="revealNextStep(this)">
                 <i class="fas fa-play"></i>
             </button>
         </div>
@@ -571,7 +527,6 @@
             </div>
         </div>
 
-        <!-- 0. 根节点 (默认显示) -->
         <div class="root-wrapper">
             <div class="t-card">
                 <span class="t-label">Initial State</span>
@@ -580,12 +535,7 @@
             <div class="root-line"></div>
         </div>
 
-        <!-- 2. 分支系统 -->
         <div class="branches-container">
-            
-            <!-- 
-               Step 1 (Delay): 虚线 SVG
-            -->
             <svg class="dashed-svg-container step-hidden" data-step="1" data-delay="1000" viewBox="0 0 540 400" preserveAspectRatio="xMidYMin meet">
                 <defs>
                     <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
@@ -597,35 +547,26 @@
                       marker-end="url(#arrowhead)"/>
             </svg>
 
-            <!-- Step 1 (Immediate): 横梁连接线 -->
             <div class="connector-bridge step-hidden" data-step="1"></div>
 
-            <!-- 左分支 (Fail) -->
             <div class="branch-col">
-                <!-- Step 1 (Immediate): 箭头 -->
                 <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
                 
-                <!-- Step 1 (Immediate): 失败卡片 -->
                 <div class="t-card fail step-hidden" data-step="1">
                     <span class="t-label">Open the door</span>
                     <div class="media-wrapper">
                         <video src="static/s121.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s121.mp4')" title="World Model"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr121.mp4')" title="Raw Observation"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r121.mp4')" title="Human/Seg"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s121.mp4')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr121.mp4')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r121.mp4')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                     <div class="status-badge"><i class="fas fa-times"></i></div>
                 </div>
             </div>
 
-            <!-- 右分支 (Success Sequence) -->
             <div class="branch-col">
-                
-                <!-- 
-                   Step 1 (Delay): New Branch 标签
-                -->
                 <div class="new-branch-group step-hidden" data-step="1" data-delay="1000">
                     <div class="line-segment"></div>
                     <div class="branch-tag">New Branch</div>
@@ -633,45 +574,40 @@
                     <div class="css-arrow-down" style="margin-bottom: 5px;"></div>
                 </div>
 
-                <!-- Step 2: Pick up tennis -->
                 <div class="t-card step-hidden" data-step="2">
                     <span class="t-label">Pick up the tennis</span>
                     <div class="media-wrapper">
                         <video src="static/s111.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s111.mp4')" title="World Model"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr111.mp4')" title="Raw Observation"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r111.mp4')" title="Human/Seg"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s111.mp4')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr111.mp4')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r111.mp4')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Step 3: Arrow + Put on desk -->
                 <div class="step-arrow-icon step-hidden" data-step="3"><i class="fas fa-arrow-down"></i></div>
-
                 <div class="t-card step-hidden" data-step="3">
                     <span class="t-label">Put on the desk</span>
                     <div class="media-wrapper">
                         <video src="static/s112.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s112.mp4')" title="World Model"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr112.mp4')" title="Raw Observation"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r112.mp4')" title="Human/Seg"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s112.mp4')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr112.mp4')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r112.mp4')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Step 4: Arrow + Open door -->
                 <div class="step-arrow-icon step-hidden" data-step="4"><i class="fas fa-arrow-down"></i></div>
-
                 <div class="t-card success step-hidden" data-step="4">
                     <span class="t-label">Open the door</span>
                     <div class="media-wrapper">
                         <video src="static/s113.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s113.mp4')" title="World Model"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr113.mp4')" title="Raw Observation"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r113.mp4')" title="Human/Seg"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s113.mp4')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr113.mp4')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r113.mp4')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                     <div class="status-badge"><i class="fas fa-check"></i></div>
@@ -679,6 +615,83 @@
             </div>
         </div>
     </div>
+
+    <div class="task-tree-container" id="task2" data-current-step="0" data-max-steps="3">
+        
+        <div class="control-btn-container">
+            <button class="next-step-btn" onclick="revealNextStep(this)">
+                <i class="fas fa-play"></i>
+            </button>
+        </div>
+
+        <div class="task-header-group">
+            <div class="task-label">Task 2</div>
+            <div class="task-instruction">
+                <i class="fas fa-user-circle"></i> 
+                Reorient the pen and drop it into a pen holder.
+            </div>
+        </div>
+
+        <div class="root-wrapper">
+            <div class="t-card">
+                <span class="t-label">Initial State</span>
+                <img src="static/s2_initial.png" alt="Initial State"> 
+            </div>
+            <div class="root-line"></div>
+        </div>
+
+        <div class="node-stack step-hidden" data-step="1">
+            <div class="t-card">
+                <span class="t-label">Pick up the pen</span>
+                 <div class="media-wrapper">
+                    <video src="static/s2_pickup.mp4" autoplay loop muted playsinline></video>
+                    <div class="side-toolbar">
+                        <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s2_pickup.mp4')"><i class="fas fa-globe"></i></div>
+                        <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr2_pickup.mp4')"><i class="fas fa-camera"></i></div>
+                        <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r2_pickup.mp4')"><i class="fas fa-user"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="root-line"></div> </div>
+
+        <div class="branches-container">
+            
+            <div class="connector-bridge step-hidden" data-step="2"></div>
+
+            <div class="branch-col">
+                <div class="arrow-top-gap css-arrow-down step-hidden" data-step="2"></div>
+                <div class="t-card fail step-hidden" data-step="2">
+                    <span class="t-label">Put into holder 1</span>
+                    <div class="media-wrapper">
+                        <video src="static/s2_holder1.mp4" autoplay loop muted playsinline></video>
+                        <div class="side-toolbar">
+                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s2_holder1.mp4')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr2_holder1.mp4')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r2_holder1.mp4')"><i class="fas fa-user"></i></div>
+                        </div>
+                    </div>
+                    <div class="status-badge"><i class="fas fa-times"></i></div>
+                </div>
+            </div>
+
+            <div class="branch-col">
+                <div class="arrow-top-gap css-arrow-down step-hidden" data-step="3"></div>
+                <div class="t-card success step-hidden" data-step="3">
+                    <span class="t-label">Put into holder 2</span>
+                    <div class="media-wrapper">
+                        <video src="static/s2_holder2.mp4" autoplay loop muted playsinline></video>
+                        <div class="side-toolbar">
+                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s2_holder2.mp4')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr2_holder2.mp4')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r2_holder2.mp4')"><i class="fas fa-user"></i></div>
+                        </div>
+                    </div>
+                    <div class="status-badge"><i class="fas fa-check"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 <script>
     // --- 视频切换逻辑 ---
@@ -698,57 +711,60 @@
         btnElement.classList.add('active');
     }
 
-    // --- 步骤逐步显示逻辑 ---
-    let currentStep = 0; // 当前步数
-    const totalSteps = 4; // 总步数
+    // --- 步骤逐步显示逻辑 (支持多个 Task 独立控制) ---
+    function revealNextStep(btn) {
+        // 找到当前按钮所属的 Task 容器
+        const container = btn.closest('.task-tree-container');
+        
+        // 读取当前进度
+        let currentStep = parseInt(container.getAttribute('data-current-step') || 0);
+        const maxSteps = parseInt(container.getAttribute('data-max-steps') || 4);
 
-    function revealNextStep() {
-        if (currentStep >= totalSteps) return;
+        if (currentStep >= maxSteps) {
+            // 重置逻辑
+            resetSteps(container, btn);
+            return;
+        }
 
         currentStep++;
+        container.setAttribute('data-current-step', currentStep);
 
-        // 查找所有属于当前步骤的元素
-        const elements = document.querySelectorAll(`.step-hidden[data-step="${currentStep}"]`);
+        // 查找该容器内所有属于当前步骤的元素
+        const elements = container.querySelectorAll(`.step-hidden[data-step="${currentStep}"]`);
         
         elements.forEach(el => {
-            // 检查是否有延迟
             const delayTime = el.getAttribute('data-delay') || 0;
-            
             if (delayTime > 0) {
-                // 有延迟的元素 (如 New Branch)
                 setTimeout(() => {
                     el.classList.add('step-visible');
                 }, delayTime);
             } else {
-                // 立即显示的元素 (如左侧卡片)
                 el.classList.add('step-visible');
             }
         });
 
-        // 按钮状态管理
-        if (currentStep === totalSteps) {
-            const btn = document.querySelector('.next-step-btn');
-            // 改为重置按钮
+        // 如果达到最大步数，将按钮变为“重置”图标
+        if (currentStep === maxSteps) {
             btn.innerHTML = '<i class="fas fa-redo"></i>';
-            btn.onclick = resetSteps;
-            btn.style.paddingLeft = "0"; // 重置时取消padding
+            btn.style.paddingLeft = "0";
         }
     }
 
-    // 重置逻辑
-    function resetSteps() {
-        currentStep = 0;
-        const allHidden = document.querySelectorAll('.step-hidden');
+    function resetSteps(container, btn) {
+        // 重置计数
+        container.setAttribute('data-current-step', 0);
+        
+        // 隐藏所有 hidden 元素
+        const allHidden = container.querySelectorAll('.step-hidden');
         allHidden.forEach(el => {
             el.classList.remove('step-visible');
         });
         
-        const btn = document.querySelector('.next-step-btn');
+        // 恢复按钮图标
         btn.innerHTML = '<i class="fas fa-play"></i>';
-        btn.onclick = revealNextStep;
-        btn.style.paddingLeft = "5px"; // 恢复play图标的视觉居中
+        btn.style.paddingLeft = "5px";
     }
 </script>
 </body>
-
 </html>
+```
