@@ -499,7 +499,6 @@
         closed-loop manner with visual feedback and re-planning.
     </p>
 
-
     <div class="task-tree-container" id="task1" data-current-step="0" data-max-steps="4">
         
         <div class="control-btn-container">
@@ -519,7 +518,14 @@
         <div class="root-wrapper">
             <div class="t-card">
                 <span class="t-label">Initial State</span>
-                <img src="static/s1.png" alt="Initial State">
+                <div class="media-wrapper">
+                    <img src="static/s1.png" alt="Initial State">
+                    <div class="side-toolbar">
+                        <div class="view-btn btn-blue active" onclick="changeImage(this, 'static/s1.png')"><i class="fas fa-globe"></i></div>
+                        <div class="view-btn btn-yellow" onclick="changeImage(this, 'static/tr1.png')"><i class="fas fa-camera"></i></div>
+                        <div class="view-btn btn-dark" onclick="changeImage(this, 'static/r1.png')"><i class="fas fa-user"></i></div>
+                    </div>
+                </div>
             </div>
             <div class="root-line"></div>
         </div>
@@ -624,7 +630,14 @@
         <div class="root-wrapper">
             <div class="t-card">
                 <span class="t-label">Initial State</span>
-                <img src="static/s2.png" alt="Initial State"> 
+                <div class="media-wrapper">
+                    <img src="static/s2.png" alt="Initial State"> 
+                    <div class="side-toolbar">
+                        <div class="view-btn btn-blue active" onclick="changeImage(this, 'static/s2.png')"><i class="fas fa-globe"></i></div>
+                        <div class="view-btn btn-yellow" onclick="changeImage(this, 'static/tr2.png')"><i class="fas fa-camera"></i></div>
+                        <div class="view-btn btn-dark" onclick="changeImage(this, 'static/r2.png')"><i class="fas fa-user"></i></div>
+                    </div>
+                </div>
             </div>
             <div class="root-line"></div>
         </div>
@@ -641,7 +654,8 @@
                     </div>
                 </div>
             </div>
-            <div class="root-line"></div> </div>
+            <div class="root-line"></div> 
+        </div>
 
         <div class="branches-container">
             
@@ -694,6 +708,19 @@
         } else {
             console.log("Already playing this video source");
         }
+
+        const allBtns = btnElement.parentElement.querySelectorAll('.view-btn');
+        allBtns.forEach(btn => btn.classList.remove('active'));
+        btnElement.classList.add('active');
+    }
+
+    // --- 图片切换逻辑 (新增) ---
+    function changeImage(btnElement, imageSource) {
+        const wrapper = btnElement.closest('.media-wrapper');
+        const img = wrapper.querySelector('img');
+        
+        // 直接设置 src 即可
+        img.src = imageSource;
 
         const allBtns = btnElement.parentElement.querySelectorAll('.view-btn');
         allBtns.forEach(btn => btn.classList.remove('active'));
