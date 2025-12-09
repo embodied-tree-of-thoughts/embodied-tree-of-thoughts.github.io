@@ -796,7 +796,33 @@
         <div class="task-label">Task 3</div>
         
         <div class="control-btn-container">
-            <!-- Control buttons -->
+            <div class="next-action-group">
+                <button class="next-step-btn" onclick="revealNextStep(this)">
+                    <i class="fas fa-play"></i>
+                </button>
+                <span class="next-action-label">Next action</span>
+            </div>
+
+            <div class="global-view-controls">
+                <div class="global-view-item">
+                    <button class="view-btn btn-blue active" onclick="globalChangeView(this, 's')">
+                        <i class="fas fa-globe"></i>
+                    </button>
+                    <span class="global-view-label">Simulator view</span>
+                </div>
+                <div class="global-view-item">
+                    <button class="view-btn btn-yellow" onclick="globalChangeView(this, 'tr')">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    <span class="global-view-label">Camera view</span>
+                </div>
+                <div class="global-view-item">
+                    <button class="view-btn btn-dark" onclick="globalChangeView(this, 'r')">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <span class="global-view-label">Third-person view</span>
+                </div>
+            </div>
         </div>
         
         <div class="task-header-group">
@@ -810,9 +836,12 @@
             <div class="t-card">
                 <span class="t-label">Initial State</span>
                 <div class="media-wrapper" data-active-view="s">
-                    <img src="static/r1.png" alt="Initial State">
+                    <!-- 请替换实际图片路径 -->
+                    <img src="static/s3.png" alt="Initial State">
                     <div class="side-toolbar">
-                        <!-- View buttons -->
+                        <div class="view-btn btn-blue active" onclick="changeMedia(this, 'static/s3.png', null, 's')"><i class="fas fa-globe"></i></div>
+                        <div class="view-btn btn-yellow" onclick="changeMedia(this, 'static/tr3.png', null, 'tr')"><i class="fas fa-camera"></i></div>
+                        <div class="view-btn btn-dark" onclick="changeMedia(this, 'static/r3.png', null, 'r')"><i class="fas fa-user"></i></div>
                     </div>
                 </div>
             </div>
@@ -820,26 +849,37 @@
         </div>
         
         <div class="branches-container">
+            <!-- Connector Bridge for visualization -->
+            <div class="connector-bridge step-hidden" data-step="1"></div>
+
+            <!-- Left Branch: Step 1 (Fail) -->
             <div class="branch-col">
+                <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
                 <div class="t-card fail step-hidden" data-step="1">
                     <span class="t-label">Pick up holder (horizontally)</span>
-                    <div class="media-wrapper" data-view-s="static/s111.mp4" data-active-view="s">
-                        <video src="static/s111.mp4" autoplay loop muted playsinline></video>
+                    <div class="media-wrapper" data-view-s="static/s3_fail.mp4" data-view-tr="static/tr3_fail.mp4" data-view-r="static/r3_fail.mp4" data-active-view="s">
+                        <video src="static/s3_fail.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <!-- View buttons -->
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s3_fail.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr3_fail.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r3_fail.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                     <div class="status-badge"><i class="fas fa-times"></i></div>
                 </div>
             </div>
             
+            <!-- Right Branch: Step 2 (Success) -->
             <div class="branch-col">
+                <div class="arrow-top-gap css-arrow-down step-hidden" data-step="2"></div>
                 <div class="t-card success step-hidden" data-step="2">
                     <span class="t-label">Pick up holder (vertically)</span>
-                    <div class="media-wrapper" data-view-s="static/s111.mp4" data-active-view="s">
-                        <video src="static/s111.mp4" autoplay loop muted playsinline></video>
+                    <div class="media-wrapper" data-view-s="static/s3_success.mp4" data-view-tr="static/tr3_success.mp4" data-view-r="static/r3_success.mp4" data-active-view="s">
+                        <video src="static/s3_success.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <!-- View buttons -->
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s3_success.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr3_success.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r3_success.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                     <div class="status-badge"><i class="fas fa-check"></i></div>
@@ -847,13 +887,38 @@
             </div>
         </div>
     </div>
-    
     <!-- Task 4 -->
-    <div class="task-tree-container" id="task4" data-current-step="0" data-max-steps="3">
+    <div class="task-tree-container" id="task4" data-current-step="0" data-max-steps="4">
         <div class="task-label">Task 4</div>
         
         <div class="control-btn-container">
-            <!-- Control buttons -->
+            <div class="next-action-group">
+                <button class="next-step-btn" onclick="revealNextStep(this)">
+                    <i class="fas fa-play"></i>
+                </button>
+                <span class="next-action-label">Next action</span>
+            </div>
+
+            <div class="global-view-controls">
+                <div class="global-view-item">
+                    <button class="view-btn btn-blue active" onclick="globalChangeView(this, 's')">
+                        <i class="fas fa-globe"></i>
+                    </button>
+                    <span class="global-view-label">Simulator view</span>
+                </div>
+                <div class="global-view-item">
+                    <button class="view-btn btn-yellow" onclick="globalChangeView(this, 'tr')">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    <span class="global-view-label">Camera view</span>
+                </div>
+                <div class="global-view-item">
+                    <button class="view-btn btn-dark" onclick="globalChangeView(this, 'r')">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <span class="global-view-label">Third-person view</span>
+                </div>
+            </div>
         </div>
         
         <div class="task-header-group">
@@ -867,9 +932,11 @@
             <div class="t-card">
                 <span class="t-label">Initial State</span>
                 <div class="media-wrapper" data-active-view="s">
-                    <img src="static/r1.png" alt="Initial State">
+                    <img src="static/s4.png" alt="Initial State">
                     <div class="side-toolbar">
-                        <!-- View buttons -->
+                        <div class="view-btn btn-blue active" onclick="changeMedia(this, 'static/s4.png', null, 's')"><i class="fas fa-globe"></i></div>
+                        <div class="view-btn btn-yellow" onclick="changeMedia(this, 'static/tr4.png', null, 'tr')"><i class="fas fa-camera"></i></div>
+                        <div class="view-btn btn-dark" onclick="changeMedia(this, 'static/r4.png', null, 'r')"><i class="fas fa-user"></i></div>
                     </div>
                 </div>
             </div>
@@ -877,20 +944,29 @@
         </div>
         
         <div class="branches-container">
+            <!-- Visual Bridge -->
+            <div class="connector-bridge step-hidden" data-step="1"></div>
+
+            <!-- Left Branch: Step 1 (Fail) -->
             <div class="branch-col">
+                <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
                 <div class="t-card fail step-hidden" data-step="1">
                     <span class="t-label">Close the drawer</span>
-                    <div class="media-wrapper" data-view-s="static/s111.mp4" data-active-view="s">
-                        <video src="static/s111.mp4" autoplay loop muted playsinline></video>
+                    <div class="media-wrapper" data-view-s="static/s4_fail.mp4" data-view-tr="static/tr4_fail.mp4" data-view-r="static/r4_fail.mp4" data-active-view="s">
+                        <video src="static/s4_fail.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <!-- View buttons -->
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s4_fail.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr4_fail.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r4_fail.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                     <div class="status-badge"><i class="fas fa-times"></i></div>
                 </div>
             </div>
             
+            <!-- Right Branch: Step 2, 3, 4 (Sequence) -->
             <div class="branch-col">
+                <!-- New Branch Tag -->
                 <div class="new-branch-group step-hidden" data-step="2">
                     <div class="line-segment"></div>
                     <div class="branch-tag">New Branch</div>
@@ -898,22 +974,47 @@
                     <div class="css-arrow-down" style="margin-bottom: 5px;"></div>
                 </div>
                 
-                <div class="t-card success step-hidden" data-step="3">
+                <!-- Step 2: Pick up toy -->
+                <div class="t-card step-hidden" data-step="2">
                     <span class="t-label">Pick up the toy</span>
-                    <div class="media-wrapper" data-view-s="static/s111.mp4" data-active-view="s">
-                        <video src="static/s111.mp4" autoplay loop muted playsinline></video>
+                    <div class="media-wrapper" data-view-s="static/s4_step2.mp4" data-view-tr="static/tr4_step2.mp4" data-view-r="static/r4_step2.mp4" data-active-view="s">
+                        <video src="static/s4_step2.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <!-- View buttons -->
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s4_step2.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr4_step2.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r4_step2.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                 </div>
                 
+                <!-- Arrow -->
+                <div class="step-arrow-icon step-hidden" data-step="3"><i class="fas fa-arrow-down"></i></div>
+
+                <!-- Step 3: Put on drawer -->
+                <div class="t-card step-hidden" data-step="3">
+                    <span class="t-label">Put on the drawer</span>
+                    <div class="media-wrapper" data-view-s="static/s4_step3.mp4" data-view-tr="static/tr4_step3.mp4" data-view-r="static/r4_step3.mp4" data-active-view="s">
+                        <video src="static/s4_step3.mp4" autoplay loop muted playsinline></video>
+                        <div class="side-toolbar">
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s4_step3.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr4_step3.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r4_step3.mp4', 'r')"><i class="fas fa-user"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Arrow -->
+                <div class="step-arrow-icon step-hidden" data-step="4"><i class="fas fa-arrow-down"></i></div>
+
+                <!-- Step 4: Close drawer (Success) -->
                 <div class="t-card success step-hidden" data-step="4">
                     <span class="t-label">Close the drawer</span>
-                    <div class="media-wrapper" data-view-s="static/s111.mp4" data-active-view="s">
-                        <video src="static/s111.mp4" autoplay loop muted playsinline></video>
+                    <div class="media-wrapper" data-view-s="static/s4_step4.mp4" data-view-tr="static/tr4_step4.mp4" data-view-r="static/r4_step4.mp4" data-active-view="s">
+                        <video src="static/s4_step4.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <!-- View buttons -->
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s4_step4.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr4_step4.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r4_step4.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                     <div class="status-badge"><i class="fas fa-check"></i></div>
@@ -923,11 +1024,38 @@
     </div>
     
     <!-- Disturbance -->
+    <!-- Disturbance -->
     <div class="task-tree-container" id="disturbance" data-current-step="0" data-max-steps="4">
         <div class="task-label">Disturbance</div>
         
         <div class="control-btn-container">
-            <!-- Control buttons -->
+            <div class="next-action-group">
+                <button class="next-step-btn" onclick="revealNextStep(this)">
+                    <i class="fas fa-play"></i>
+                </button>
+                <span class="next-action-label">Next action</span>
+            </div>
+
+            <div class="global-view-controls">
+                <div class="global-view-item">
+                    <button class="view-btn btn-blue active" onclick="globalChangeView(this, 's')">
+                        <i class="fas fa-globe"></i>
+                    </button>
+                    <span class="global-view-label">Simulator view</span>
+                </div>
+                <div class="global-view-item">
+                    <button class="view-btn btn-yellow" onclick="globalChangeView(this, 'tr')">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    <span class="global-view-label">Camera view</span>
+                </div>
+                <div class="global-view-item">
+                    <button class="view-btn btn-dark" onclick="globalChangeView(this, 'r')">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <span class="global-view-label">Third-person view</span>
+                </div>
+            </div>
         </div>
         
         <div class="task-header-group">
@@ -937,66 +1065,117 @@
             </div>
         </div>
         
+        <!-- Step 0: Root -->
         <div class="root-wrapper">
             <div class="t-card">
                 <span class="t-label">Initial State</span>
                 <div class="media-wrapper" data-active-view="s">
-                    <img src="static/r1.png" alt="Initial State">
+                    <img src="static/sd.png" alt="Initial State">
                     <div class="side-toolbar">
-                        <!-- View buttons -->
+                        <div class="view-btn btn-blue active" onclick="changeMedia(this, 'static/sd.png', null, 's')"><i class="fas fa-globe"></i></div>
+                        <div class="view-btn btn-yellow" onclick="changeMedia(this, 'static/trd.png', null, 'tr')"><i class="fas fa-camera"></i></div>
+                        <div class="view-btn btn-dark" onclick="changeMedia(this, 'static/rd.png', null, 'r')"><i class="fas fa-user"></i></div>
                     </div>
                 </div>
             </div>
             <div class="root-line"></div>
         </div>
         
-        <div class="branches-container">
+        <!-- Step 1: Initial Branches (Left/Right) -->
+        <div class="branches-container" style="margin-bottom: 20px;">
+            <div class="connector-bridge step-hidden" data-step="1"></div>
+
             <div class="branch-col">
-                <div class="t-card success step-hidden" data-step="1">
+                <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
+                <div class="t-card step-hidden" data-step="1">
                     <span class="t-label">Pick up the tennis 1</span>
-                    <div class="media-wrapper" data-view-s="static/s111.mp4" data-active-view="s">
-                        <video src="static/s111.mp4" autoplay loop muted playsinline></video>
+                    <div class="media-wrapper" data-view-s="static/s_dist_1_L.mp4" data-view-tr="static/tr_dist_1_L.mp4" data-view-r="static/r_dist_1_L.mp4" data-active-view="s">
+                        <video src="static/s_dist_1_L.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <!-- View buttons -->
+                             <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s_dist_1_L.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr_dist_1_L.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r_dist_1_L.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
-                    <div class="status-badge"><i class="fas fa-check"></i></div>
+                     <!-- 图中绿色勾选 -->
+                    <div class="status-badge" style="background: #27ae60;"><i class="fas fa-check"></i></div>
                 </div>
             </div>
             
             <div class="branch-col">
-                <div class="t-card success step-hidden" data-step="2">
+                <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
+                <div class="t-card step-hidden" data-step="1">
                     <span class="t-label">Pick up the tennis 2</span>
-                    <div class="media-wrapper" data-view-s="static/s111.mp4" data-active-view="s">
-                        <video src="static/s111.mp4" autoplay loop muted playsinline></video>
-                        <div class="side-toolbar">
-                            <!-- View buttons -->
+                    <div class="media-wrapper" data-view-s="static/s_dist_1_R.mp4" data-view-tr="static/tr_dist_1_R.mp4" data-view-r="static/r_dist_1_R.mp4" data-active-view="s">
+                        <video src="static/s_dist_1_R.mp4" autoplay loop muted playsinline></video>
+                         <div class="side-toolbar">
+                             <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s_dist_1_R.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr_dist_1_R.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r_dist_1_R.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
-                    <div class="status-badge"><i class="fas fa-check"></i></div>
                 </div>
             </div>
+        </div>
+
+        <!-- Step 2: Disturbance Event & New State -->
+        <div class="branch-col step-hidden" data-step="2" style="width: 100%; margin-bottom: 20px;">
+            <!-- Disturbance Label/Connector -->
+            <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 15px;">
+                <div style="background: #e1e1e1; padding: 5px 15px; border-radius: 15px; font-weight: bold; color: #555; display: flex; align-items: center; gap: 8px;">
+                     <i class="fas fa-user-friends"></i> Disturbance
+                </div>
+                <div class="css-arrow-down" style="border-top-color: #f39c12; margin-top: 5px;"></div>
+            </div>
             
+            <!-- Orange Card (New State) -->
+            <div class="t-card" style="border-color: #f39c12; box-shadow: 0 0 10px rgba(243, 156, 18, 0.3);">
+                <!-- No top label based on image, or just empty -->
+                <div class="media-wrapper" data-active-view="s">
+                    <img src="static/s_dist_2.png" alt="Disturbed State">
+                    <div class="side-toolbar">
+                        <div class="view-btn btn-blue active" onclick="changeMedia(this, 'static/s_dist_2.png', null, 's')"><i class="fas fa-globe"></i></div>
+                        <div class="view-btn btn-yellow" onclick="changeMedia(this, 'static/tr_dist_2.png', null, 'tr')"><i class="fas fa-camera"></i></div>
+                        <div class="view-btn btn-dark" onclick="changeMedia(this, 'static/r_dist_2.png', null, 'r')"><i class="fas fa-user"></i></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Vertical line leading to next branches -->
+            <div class="line-segment" style="height: 30px; margin-top: 5px;"></div>
+        </div>
+
+        <!-- Step 3 & 4: Final Branches -->
+        <div class="branches-container">
+            <div class="connector-bridge step-hidden" data-step="3"></div>
+            
+            <!-- Left: Fail (Step 3) -->
             <div class="branch-col">
+                <div class="arrow-top-gap css-arrow-down step-hidden" data-step="3"></div>
                 <div class="t-card fail step-hidden" data-step="3">
-                    <span class="t-label">Disturbance</span>
-                    <div class="media-wrapper" data-view-s="static/s111.mp4" data-active-view="s">
-                        <video src="static/s111.mp4" autoplay loop muted playsinline></video>
+                    <span class="t-label">Pick up the tennis 1</span>
+                    <div class="media-wrapper" data-view-s="static/s_dist_3_fail.mp4" data-view-tr="static/tr_dist_3_fail.mp4" data-view-r="static/r_dist_3_fail.mp4" data-active-view="s">
+                        <video src="static/s_dist_3_fail.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <!-- View buttons -->
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s_dist_3_fail.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr_dist_3_fail.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r_dist_3_fail.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                     <div class="status-badge"><i class="fas fa-times"></i></div>
                 </div>
             </div>
             
+            <!-- Right: Success (Step 4) -->
             <div class="branch-col">
+                <div class="arrow-top-gap css-arrow-down step-hidden" data-step="4"></div>
                 <div class="t-card success step-hidden" data-step="4">
                     <span class="t-label">Pick up the tennis 2</span>
-                    <div class="media-wrapper" data-view-s="static/s111.mp4" data-active-view="s">
-                        <video src="static/s111.mp4" autoplay loop muted playsinline></video>
+                    <div class="media-wrapper" data-view-s="static/s_dist_4_success.mp4" data-view-tr="static/tr_dist_4_success.mp4" data-view-r="static/r_dist_4_success.mp4" data-active-view="s">
+                        <video src="static/s_dist_4_success.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <!-- View buttons -->
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s_dist_4_success.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr_dist_4_success.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r_dist_4_success.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                     <div class="status-badge"><i class="fas fa-check"></i></div>
