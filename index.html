@@ -10,7 +10,7 @@
     
     <style>
         /* ========================================= */
-        /* 1. 基础页面样式                           */
+        /* 1. 基础页面样式                         */
         /* ========================================= */
         body {
             font-family: 'Noto Sans', sans-serif;
@@ -86,7 +86,7 @@
         }
 
         /* ========================================= */
-        /* 2. 树状结构样式 (Tree Visualization)       */
+        /* 2. 树状结构样式 (Tree Visualization)      */
         /* ========================================= */
         
         .task-tree-container {
@@ -103,13 +103,15 @@
             overflow: visible; 
         }
 
-        /* Task 标题 */
+        /* 任务指令框新位置 */
         .task-header-group {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            text-align: right;
+            position: relative; /* 改为 relative */
+            top: auto;
+            right: auto;
+            text-align: center; /* 居中 */
+            margin-bottom: 25px; /* 增加与下方内容的间距 */
             z-index: 20;
+            width: 100%; /* 占满宽度以便居中 */
         }
         
         .task-label {
@@ -123,13 +125,15 @@
             background: #f1f3f4;
             padding: 8px 16px;
             border-radius: 20px;
-            font-size: 0.9em;
+            font-size: 1.1em; /* 稍微放大 */
             color: #555;
-            margin-top: 5px;
-            display: flex;
+            margin-top: 10px;
+            display: inline-flex; /* 使得框的宽度只包裹内容 */
             align-items: center;
             gap: 8px;
             font-weight: 500;
+            /* 确保 task-instruction 在 task-header-group 中居中 */
+            justify-content: center;
         }
 
         /* --- 卡片组件 --- */
@@ -315,10 +319,12 @@
                 display: none; 
             }
             .arrow-top-gap { margin-top: 0; }
+            /* 调整 control-btn-container 在小屏幕上的位置 */
             .control-btn-container {
-                left: auto;
-                right: 10px;
+                left: 10px;
+                right: auto;
                 top: 10px;
+                align-items: flex-start; /* 左对齐 */
             }
         }
 
@@ -376,7 +382,7 @@
         .btn-dark:hover, .btn-dark.active { background: #34495e; color: white; }
 
         /* ========================================= */
-        /* 4. 逐步显示动画与控制按钮 (Step Reveal)     */
+        /* 4. 逐步显示动画与控制按钮 (Step Reveal)      */
         /* ========================================= */
         
         .step-hidden {
@@ -392,11 +398,22 @@
             pointer-events: auto;
         }
         
+        /* 总体控制按钮容器 */
         .control-btn-container {
             position: absolute;
-            left: 20px;    
-            top: 20px;     
+            left: 20px;     
+            top: 20px;       
             z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* 左对齐所有子元素 */
+        }
+
+        /* 步进按钮及其标签容器 */
+        .next-action-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px; /* 与下方全局按钮的间距 */
         }
         
         .next-step-btn {
@@ -414,6 +431,7 @@
             align-items: center;
             justify-content: center;
             padding-left: 5px; 
+            margin-right: 15px; /* 与文字的间距 */
         }
         
         .next-step-btn:hover {
@@ -423,6 +441,33 @@
         
         .next-step-btn:active {
             transform: scale(0.95);
+        }
+
+        .next-action-label {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #2c3e50;
+            white-space: nowrap;
+        }
+
+        /* 全局切换按钮组 */
+        .global-view-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .global-view-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .global-view-label {
+            font-size: 0.9em;
+            color: #555;
+            font-weight: 500;
+            white-space: nowrap;
         }
 
     </style>
@@ -493,7 +538,7 @@
     <p style="text-align: justify; padding: 0 20px; max-width: 900px; margin: 0 auto;">
         Given a task instruction, the system first reconstructs the real scene into an interactive 3D digital twin. It
         then constructs a world-model-grounded planning tree through <em>Priori Branching</em> and <em>Reflective
-            Branching</em>. Priori Branching proposes initial candidate branches, while Reflective Branching analyzes
+        Branching</em>. Priori Branching proposes initial candidate branches, while Reflective Branching analyzes
         simulated execution failures to expand the tree with revised branches. Through iterative searching and expansion
         of the planning tree, the system identifies a feasible plan, which is finally executed on the real robot in a
         closed-loop manner with visual feedback and re-planning.
@@ -502,9 +547,33 @@
     <div class="task-tree-container" id="task1" data-current-step="0" data-max-steps="4">
         
         <div class="control-btn-container">
-            <button class="next-step-btn" onclick="revealNextStep(this)">
-                <i class="fas fa-play"></i>
-            </button>
+            <div class="next-action-group">
+                <button class="next-step-btn" onclick="revealNextStep(this)">
+                    <i class="fas fa-play"></i>
+                </button>
+                <span class="next-action-label">Next action</span>
+            </div>
+
+            <div class="global-view-controls">
+                <div class="global-view-item">
+                    <button class="view-btn btn-blue active" onclick="globalChangeView(this, 's')">
+                        <i class="fas fa-globe"></i>
+                    </button>
+                    <span class="global-view-label">Simulator view</span>
+                </div>
+                <div class="global-view-item">
+                    <button class="view-btn btn-yellow" onclick="globalChangeView(this, 'tr')">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    <span class="global-view-label">Camera view</span>
+                </div>
+                <div class="global-view-item">
+                    <button class="view-btn btn-dark" onclick="globalChangeView(this, 'r')">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <span class="global-view-label">Third-person view</span>
+                </div>
+            </div>
         </div>
 
         <div class="task-header-group">
@@ -518,12 +587,12 @@
         <div class="root-wrapper">
             <div class="t-card">
                 <span class="t-label">Initial State</span>
-                <div class="media-wrapper">
+                <div class="media-wrapper" data-active-view="s">
                     <img src="static/s1.png" alt="Initial State">
                     <div class="side-toolbar">
-                        <div class="view-btn btn-blue active" onclick="changeImage(this, 'static/s1.png')"><i class="fas fa-globe"></i></div>
-                        <div class="view-btn btn-yellow" onclick="changeImage(this, 'static/tr1.png')"><i class="fas fa-camera"></i></div>
-                        <div class="view-btn btn-dark" onclick="changeImage(this, 'static/r1.png')"><i class="fas fa-user"></i></div>
+                        <div class="view-btn btn-blue active" onclick="changeMedia(this, 's1.png', 's1.mp4', 's')"><i class="fas fa-globe"></i></div>
+                        <div class="view-btn btn-yellow" onclick="changeMedia(this, 'tr1.png', 'tr1.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                        <div class="view-btn btn-dark" onclick="changeMedia(this, 'r1.png', 'r1.mp4', 'r')"><i class="fas fa-user"></i></div>
                     </div>
                 </div>
             </div>
@@ -533,13 +602,13 @@
         <div class="branches-container">
             <svg class="dashed-svg-container step-hidden" data-step="1" data-delay="1000" viewBox="0 0 540 400" preserveAspectRatio="xMidYMin meet">
                 <defs>
-                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <marker id="arrowhead1" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
                         <polygon points="0 0, 10 3.5, 0 7" fill="#7f8c8d" />
                     </marker>
                 </defs>
                 <path d="M 110 185 L 110 230 L 270 230 L 270 32 L 375 32" 
                       stroke="#7f8c8d" stroke-width="3" stroke-dasharray="8,5" fill="none" stroke-linejoin="round"
-                      marker-end="url(#arrowhead)"/>
+                      marker-end="url(#arrowhead1)"/>
             </svg>
 
             <div class="connector-bridge step-hidden" data-step="1"></div>
@@ -547,14 +616,14 @@
             <div class="branch-col">
                 <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
                 
-                <div class="t-card fail step-hidden" data-step="1">
+                <div class="t-card fail step-hidden" data-step="1" data-id="step1_1">
                     <span class="t-label">Open the door</span>
-                    <div class="media-wrapper">
+                    <div class="media-wrapper" data-view-s="static/s121.mp4" data-view-tr="static/tr121.mp4" data-view-r="static/r121.mp4" data-active-view="s">
                         <video src="static/s121.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s121.mp4')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr121.mp4')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r121.mp4')"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s121.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr121.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r121.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                     <div class="status-badge"><i class="fas fa-times"></i></div>
@@ -569,40 +638,40 @@
                     <div class="css-arrow-down" style="margin-bottom: 5px;"></div>
                 </div>
 
-                <div class="t-card step-hidden" data-step="2">
+                <div class="t-card step-hidden" data-step="2" data-id="step1_2">
                     <span class="t-label">Pick up the tennis</span>
-                    <div class="media-wrapper">
+                    <div class="media-wrapper" data-view-s="static/s111.mp4" data-view-tr="static/tr111.mp4" data-view-r="static/r111.mp4" data-active-view="s">
                         <video src="static/s111.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s111.mp4')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr111.mp4')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r111.mp4')"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s111.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr111.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r111.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="step-arrow-icon step-hidden" data-step="3"><i class="fas fa-arrow-down"></i></div>
-                <div class="t-card step-hidden" data-step="3">
+                <div class="t-card step-hidden" data-step="3" data-id="step1_3">
                     <span class="t-label">Put on the desk</span>
-                    <div class="media-wrapper">
+                    <div class="media-wrapper" data-view-s="static/s112.mp4" data-view-tr="static/tr112.mp4" data-view-r="static/r112.mp4" data-active-view="s">
                         <video src="static/s112.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s112.mp4')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr112.mp4')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r112.mp4')"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s112.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr112.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r112.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="step-arrow-icon step-hidden" data-step="4"><i class="fas fa-arrow-down"></i></div>
-                <div class="t-card success step-hidden" data-step="4">
+                <div class="t-card success step-hidden" data-step="4" data-id="step1_4">
                     <span class="t-label">Open the door</span>
-                    <div class="media-wrapper">
+                    <div class="media-wrapper" data-view-s="static/s113.mp4" data-view-tr="static/tr113.mp4" data-view-r="static/r113.mp4" data-active-view="s">
                         <video src="static/s113.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s113.mp4')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr113.mp4')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r113.mp4')"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s113.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr113.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r113.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                     <div class="status-badge"><i class="fas fa-check"></i></div>
@@ -614,9 +683,33 @@
     <div class="task-tree-container" id="task2" data-current-step="0" data-max-steps="3">
         
         <div class="control-btn-container">
-            <button class="next-step-btn" onclick="revealNextStep(this)">
-                <i class="fas fa-play"></i>
-            </button>
+            <div class="next-action-group">
+                <button class="next-step-btn" onclick="revealNextStep(this)">
+                    <i class="fas fa-play"></i>
+                </button>
+                <span class="next-action-label">Next action</span>
+            </div>
+
+            <div class="global-view-controls">
+                <div class="global-view-item">
+                    <button class="view-btn btn-blue active" onclick="globalChangeView(this, 's')">
+                        <i class="fas fa-globe"></i>
+                    </button>
+                    <span class="global-view-label">Simulator view</span>
+                </div>
+                <div class="global-view-item">
+                    <button class="view-btn btn-yellow" onclick="globalChangeView(this, 'tr')">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    <span class="global-view-label">Camera view</span>
+                </div>
+                <div class="global-view-item">
+                    <button class="view-btn btn-dark" onclick="globalChangeView(this, 'r')">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <span class="global-view-label">Third-person view</span>
+                </div>
+            </div>
         </div>
 
         <div class="task-header-group">
@@ -630,12 +723,12 @@
         <div class="root-wrapper">
             <div class="t-card">
                 <span class="t-label">Initial State</span>
-                <div class="media-wrapper">
+                <div class="media-wrapper" data-active-view="s">
                     <img src="static/s2.png" alt="Initial State"> 
                     <div class="side-toolbar">
-                        <div class="view-btn btn-blue active" onclick="changeImage(this, 'static/s2.png')"><i class="fas fa-globe"></i></div>
-                        <div class="view-btn btn-yellow" onclick="changeImage(this, 'static/tr2.png')"><i class="fas fa-camera"></i></div>
-                        <div class="view-btn btn-dark" onclick="changeImage(this, 'static/r2.png')"><i class="fas fa-user"></i></div>
+                        <div class="view-btn btn-blue active" onclick="changeMedia(this, 's2.png', 's2.mp4', 's')"><i class="fas fa-globe"></i></div>
+                        <div class="view-btn btn-yellow" onclick="changeMedia(this, 'tr2.png', 'tr2.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                        <div class="view-btn btn-dark" onclick="changeMedia(this, 'r2.png', 'r2.mp4', 'r')"><i class="fas fa-user"></i></div>
                     </div>
                 </div>
             </div>
@@ -643,14 +736,14 @@
         </div>
 
         <div class="node-stack step-hidden" data-step="1">
-            <div class="t-card">
+            <div class="t-card" data-id="step2_1">
                 <span class="t-label">Pick up the pen</span>
-                 <div class="media-wrapper">
+                 <div class="media-wrapper" data-view-s="static/s211.mp4" data-view-tr="static/tr211.mp4" data-view-r="static/r211.mp4" data-active-view="s">
                     <video src="static/s211.mp4" autoplay loop muted playsinline></video>
                     <div class="side-toolbar">
-                        <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s211.mp4')"><i class="fas fa-globe"></i></div>
-                        <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr211.mp4')"><i class="fas fa-camera"></i></div>
-                        <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r211.mp4')"><i class="fas fa-user"></i></div>
+                        <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s211.mp4', 's')"><i class="fas fa-globe"></i></div>
+                        <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr211.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                        <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r211.mp4', 'r')"><i class="fas fa-user"></i></div>
                     </div>
                 </div>
             </div>
@@ -663,14 +756,14 @@
 
             <div class="branch-col">
                 <div class="arrow-top-gap css-arrow-down step-hidden" data-step="2"></div>
-                <div class="t-card fail step-hidden" data-step="2">
+                <div class="t-card fail step-hidden" data-step="2" data-id="step2_2_fail">
                     <span class="t-label">Put into holder 1</span>
-                    <div class="media-wrapper">
+                    <div class="media-wrapper" data-view-s="static/s212.mp4" data-view-tr="static/tr212.mp4" data-view-r="static/r212.mp4" data-active-view="s">
                         <video src="static/s212.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s212.mp4')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr212.mp4')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r212.mp4')"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s212.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr212.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r212.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                     <div class="status-badge"><i class="fas fa-times"></i></div>
@@ -679,14 +772,14 @@
 
             <div class="branch-col">
                 <div class="arrow-top-gap css-arrow-down step-hidden" data-step="3"></div>
-                <div class="t-card success step-hidden" data-step="3">
+                <div class="t-card success step-hidden" data-step="3" data-id="step2_3_success">
                     <span class="t-label">Put into holder 2</span>
-                    <div class="media-wrapper">
+                    <div class="media-wrapper" data-view-s="static/s222.mp4" data-view-tr="static/tr222.mp4" data-view-r="static/r222.mp4" data-active-view="s">
                         <video src="static/s222.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeVideo(this, 'static/s222.mp4')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeVideo(this, 'static/tr222.mp4')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeVideo(this, 'static/r222.mp4')"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s222.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr222.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r222.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                     <div class="status-badge"><i class="fas fa-check"></i></div>
@@ -697,34 +790,111 @@
 
 
 <script>
-    // --- 视频切换逻辑 ---
-    function changeVideo(btnElement, videoSource) {
+    // 视图类型到类名的映射
+    const VIEW_CLASS_MAP = {
+        's': 'btn-blue',
+        'tr': 'btn-yellow',
+        'r': 'btn-dark'
+    };
+
+    /**
+     * 切换媒体 (图片/视频)
+     * @param {HTMLElement} btnElement - 被点击的按钮元素
+     * @param {string} imageSource - 图片源路径 (Initial State 使用)
+     * @param {string} videoSource - 视频源路径 (步骤卡片使用)
+     * @param {string} viewType - 视图类型 ('s', 'tr', 'r')
+     */
+    function changeMedia(btnElement, imageSource, videoSource, viewType) {
         const wrapper = btnElement.closest('.media-wrapper');
+        const img = wrapper.querySelector('img');
         const video = wrapper.querySelector('video');
         
-        if (!video.src.includes(videoSource)) {
-            video.src = videoSource;
-            video.play();
-        } else {
-            console.log("Already playing this video source");
+        // 更新当前活动的视图类型
+        wrapper.setAttribute('data-active-view', viewType);
+
+        if (img) {
+            // 处理 Initial State (图片)
+            img.src = imageSource;
+        } else if (video) {
+            // 处理步骤卡片 (视频)
+            if (!video.src.includes(videoSource)) {
+                video.src = videoSource;
+                // 重载并播放，确保从头开始
+                video.load();
+                video.play();
+            }
         }
 
+        // 切换按钮的激活状态
         const allBtns = btnElement.parentElement.querySelectorAll('.view-btn');
         allBtns.forEach(btn => btn.classList.remove('active'));
         btnElement.classList.add('active');
     }
 
-    // --- 图片切换逻辑 (新增) ---
-    function changeImage(btnElement, imageSource) {
-        const wrapper = btnElement.closest('.media-wrapper');
-        const img = wrapper.querySelector('img');
-        
-        // 直接设置 src 即可
-        img.src = imageSource;
+    /**
+     * 全局切换视图
+     * @param {HTMLElement} globalBtn - 被点击的全局按钮元素
+     * @param {string} viewType - 要切换到的视图类型 ('s', 'tr', 'r')
+     */
+    function globalChangeView(globalBtn, viewType) {
+        // 1. 切换全局按钮的激活状态
+        const controlsContainer = globalBtn.closest('.global-view-controls');
+        const allGlobalBtns = controlsContainer.querySelectorAll('.view-btn');
+        allGlobalBtns.forEach(btn => btn.classList.remove('active'));
+        globalBtn.classList.add('active');
 
-        const allBtns = btnElement.parentElement.querySelectorAll('.view-btn');
-        allBtns.forEach(btn => btn.classList.remove('active'));
-        btnElement.classList.add('active');
+        // 2. 找到当前 Task 容器
+        const taskContainer = globalBtn.closest('.task-tree-container');
+        
+        // 3. 找到该 Task 内所有 media-wrapper
+        const mediaWrappers = taskContainer.querySelectorAll('.media-wrapper');
+
+        mediaWrappers.forEach(wrapper => {
+            const img = wrapper.querySelector('img');
+            const video = wrapper.querySelector('video');
+            const sideToolbar = wrapper.querySelector('.side-toolbar');
+            
+            // 更新活动的视图类型
+            wrapper.setAttribute('data-active-view', viewType);
+            
+            // 切换侧边栏按钮的激活状态
+            if (sideToolbar) {
+                const allSideBtns = sideToolbar.querySelectorAll('.view-btn');
+                allSideBtns.forEach(sideBtn => {
+                    sideBtn.classList.remove('active');
+                    // 找到与全局按钮类型匹配的侧边栏按钮并激活
+                    if (sideBtn.classList.contains(VIEW_CLASS_MAP[viewType])) {
+                        sideBtn.classList.add('active');
+                    }
+                });
+            }
+
+
+            if (img) {
+                // 处理 Initial State (图片)
+                // 假设 Initial State 的图片命名遵循 's1.png', 'tr1.png', 'r1.png'
+                // 需要从原始 src 提取文件名，并替换视图前缀
+                const currentSrc = img.src;
+                // 查找文件名中的前缀 s/tr/r
+                const match = currentSrc.match(/static\/(s|tr|r)(\d+)\.png/);
+                if (match) {
+                    const numberPart = match[2];
+                    const newSrc = `static/${viewType}${numberPart}.png`;
+                    img.src = newSrc;
+                }
+
+            } else if (video) {
+                // 处理步骤卡片 (视频)
+                // 从 data 属性获取视频路径
+                const newVideoSource = wrapper.getAttribute(`data-view-${viewType}`);
+                if (newVideoSource) {
+                    video.src = newVideoSource;
+                    // 重载并播放，确保从头开始
+                    video.load();
+                    video.play();
+                }
+            }
+        });
     }
 
     // --- 步骤逐步显示逻辑 (支持多个 Task 独立控制) ---
@@ -780,6 +950,12 @@
         btn.innerHTML = '<i class="fas fa-play"></i>';
         btn.style.paddingLeft = "5px";
     }
+
+    // 初始化时将原来的 changeImage/changeVideo 函数合并和替换
+    // 确保 Initial State 的 media-wrapper 具有 data-active-view 属性
+    // 并将所有 changeImage/changeVideo 调用替换为 changeMedia，
+    // 同时为视频卡片的 media-wrapper 添加 data-view-s, data-view-tr, data-view-r 属性以便全局切换调用。
+    
 </script>
 </body>
 </html>
