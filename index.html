@@ -658,6 +658,127 @@
             position: relative;
             top: -4px;
         }
+
+                /* ========================================= */
+        /* 5. 分裂式连接线 (Split Bridge) - 新增样式   */
+        /* ========================================= */
+
+        /* 这是一个容器，位置和原来的 connector-bridge 一样，但不画线，只负责布局 */
+        .bridge-split-wrapper {
+            position: absolute;
+            top: 0;
+            /* 默认位置逻辑，需根据各 Task 的具体布局微调，通常如下 */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 324px; /* 与原 connector-bridge 宽度一致 */
+            height: 20px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* 左右两半的线条 */
+        .bridge-half {
+            width: 50%; /* 各占一半 */
+            height: 20px;
+            border-top: 4px solid #2c3e50; /* 横线 */
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        /* 左半边：左侧有竖线 */
+        .bridge-half.left::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -4px; /* 向上延伸 */
+            width: 4px;
+            height: 24px;
+            background: #2c3e50;
+        }
+
+        /* 右半边：右侧有竖线 */
+        .bridge-half.right::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 4px;
+            height: 24px;
+            background: #2c3e50;
+        }
+
+        /* 针对 Task 2 的宽度调整 (Task 2 较窄) */
+        #task2 .bridge-split-wrapper {
+            width: 250px; /* 根据卡片间距估算 */
+        }
+
+        /* 针对 Task 5 的特殊样式 */
+        #task5 .bridge-split-wrapper {
+            width: 380px; /* 间距较大 */
+        }
+        /* Task 5 下层的小桥 (Pick pen -> holders) */
+        #task5 .small-bridge-wrapper {
+            position: relative;
+            width: 260px; /* 覆盖两个 holder 的宽度 */
+            height: 20px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px; /* 替代原来的箭头边距 */
+        }
+
+        /* ========================================= */
+        /* 6. Task 7 定制样式 (Advanced Custom)       */
+        /* ========================================= */
+
+        /* Task 7 初始状态的主桥 */
+        #task7 .main-bridge-split {
+            position: absolute;
+            top: 0;
+            left: 25%;
+            width: 50%;
+            display: flex;
+            justify-content: space-between;
+            z-index: 2;
+        }
+
+        /* Task 7 下层桥 (Sub bridge) 下移 */
+        #task7 .sub-bridge-custom {
+            position: absolute;
+            top: 25px; /* (3)下方的横线下移一点 */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 20px; /* 不需要太高，中间的线由 SVG 或伪元素画 */
+            display: flex;
+            justify-content: space-between;
+            z-index: 1;
+        }
+
+        /* Task 7 SVG 连线容器 (用于 9->New 和 5->New) */
+        #task7 .custom-lines-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99; /* 确保在最上层 */
+            overflow: visible;
+        }
+
+        /* 动画类：用于 SVG path 的显隐 */
+        .path-hidden {
+            opacity: 0;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            transition: opacity 0.3s, stroke-dashoffset 2s ease-in-out;
+        }
+        .path-visible {
+            opacity: 1;
+            stroke-dashoffset: 0;
+        }
     </style>
 </head>
 
@@ -799,12 +920,14 @@
                       stroke="#7f8c8d" stroke-width="3" stroke-dasharray="8,5" fill="none" stroke-linejoin="round"
                       marker-end="url(#arrowhead1)"/>
             </svg>
-
-            <div class="connector-bridge step-hidden" data-step="1"></div>
-
+        
+            <div class="bridge-split-wrapper" style="left: 20%; transform: translateX(-100%);"> 
+                 <div class="bridge-half left step-hidden" data-step="1"></div>
+                <div class="bridge-half right step-hidden" data-step="1" data-delay="300"></div>
+            </div>
+        
             <div class="branch-col">
                 <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
-                
                 <div class="t-card fail step-hidden" data-step="1" data-id="step1_1">
                     <span class="t-label">Open the door</span>
                     <div class="media-wrapper" data-view-s="static/s121.mp4" data-view-tr="static/tr121.mp4" data-view-r="static/r121.mp4" data-active-view="s">
@@ -941,9 +1064,12 @@
         </div>
 
         <div class="branches-container">
-            
-            <div class="connector-bridge step-hidden" data-step="2"></div>
-
+    
+            <div class="bridge-split-wrapper">
+                <div class="bridge-half left step-hidden" data-step="2"></div>
+                <div class="bridge-half right step-hidden" data-step="3"></div>
+            </div>
+        
             <div class="branch-col">
                 <div class="arrow-top-gap css-arrow-down step-hidden" data-step="2"></div>
                 <div class="t-card fail step-hidden" data-step="2" data-id="step2_2_fail">
@@ -1035,10 +1161,11 @@
         </div>
         
         <div class="branches-container">
-            <!-- Connector Bridge for visualization -->
-            <div class="connector-bridge step-hidden" data-step="1"></div>
-
-            <!-- Left Branch: Step 1 (Fail) -->
+            <div class="bridge-split-wrapper">
+                <div class="bridge-half left step-hidden" data-step="1"></div>
+                <div class="bridge-half right step-hidden" data-step="2"></div>
+            </div>
+        
             <div class="branch-col">
                 <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
                 <div class="t-card fail step-hidden" data-step="1">
@@ -1130,10 +1257,11 @@
         </div>
         
         <div class="branches-container">
-            <!-- Visual Bridge -->
-            <div class="connector-bridge step-hidden" data-step="1"></div>
-
-            <!-- Left Branch: Step 1 (Fail) -->
+            <div class="bridge-split-wrapper">
+                <div class="bridge-half left step-hidden" data-step="1"></div>
+                <div class="bridge-half right step-hidden" data-step="1" data-delay="300"></div>
+            </div>
+        
             <div class="branch-col">
                 <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
                 <div class="t-card fail step-hidden" data-step="1">
@@ -1419,59 +1547,68 @@
         </div>
         
         <!-- Adjusted gap to 180px to separate the big left group from the right group -->
-        <div class="branches-container" style="gap: 80px;">
-            <!-- Visual Bridge -->
-            
-
-            <!-- Left Branch: Old Strategy -->
-            <!-- Set width to auto to allow inner children to expand, align items to center -->
+        <div class="branches-container" style="gap: 80px; position: relative; padding-top: 0;">
+    
+            <div class="bridge-split-wrapper" style="top: 0; left: 50%; width: 500px;"> <div class="bridge-half left step-hidden" data-step="1"></div>
+                <div class="bridge-half right step-hidden" data-step="3" data-delay="300"></div>
+            </div>
+        
             <div class="branch-col" style="width: auto; align-items: center;">
                 <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
-                <!-- Step 1 -->
+                
                 <div class="t-card step-hidden" data-step="1">
                     <span class="t-label">Pick up the pen</span>
                     <div class="media-wrapper" data-view-s="static/s511.mp4" data-view-tr="static/tr.mp4" data-view-r="static/r511.mp4" data-active-view="s">
                         <video src="static/s511.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s511.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r511.mp4', 'r')"><i class="fas fa-user"></i></div>
+                             <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s511.mp4', 's')"><i class="fas fa-globe"></i></div>
+                             <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                             <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r511.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Split for Step 2 and 3 -->
-                <div class="step-arrow-icon step-hidden" data-step="2"><i class="fas fa-arrow-down"></i></div>
+        
+                <div style="height: 30px; display: flex; align-items: flex-end; justify-content: center; width: 100%;">
+                     <div class="small-bridge-wrapper">
+                         <div class="bridge-half left step-hidden" data-step="2"></div>
+                         <div class="bridge-half right step-hidden" data-step="3"></div>
+                         
+                         <div class="line-segment step-hidden" data-step="2" style="position: absolute; top: -15px; left: 50%; height: 15px; transform: translateX(-50%); width: 4px;"></div>
+                     </div>
+                </div>
                 
-                <!-- Increased gap from 15px to 60px to prevent overlap -->
                 <div style="display: flex; gap: 60px;">
-                    <!-- Step 2 -->
-                    <div class="t-card fail step-hidden" data-step="2" style="width: 200px;">
-                        <span class="t-label">Put into holder 1</span>
-                        <div class="media-wrapper" data-view-s="static/s512.mp4" data-view-tr="static/tr512.mp4" data-view-r="static/r512.mp4" data-active-view="s">
-                            <video src="static/s512.mp4" autoplay loop muted playsinline></video>
-                            <div class="side-toolbar">
-                                <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s512.mp4', 's')"><i class="fas fa-globe"></i></div>
-                                <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr512.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                                <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r512.mp4', 'r')"><i class="fas fa-user"></i></div>
+                     <div style="display:flex; flex-direction:column; align-items:center;">
+                         <div class="css-arrow-down step-hidden" data-step="2"></div>
+                         <div class="t-card fail step-hidden" data-step="2" style="width: 200px;">
+                             <span class="t-label">Put into holder 1</span>
+                             <div class="media-wrapper" data-view-s="static/s512.mp4" data-view-tr="static/tr512.mp4" data-view-r="static/r512.mp4" data-active-view="s">
+                                <video src="static/s512.mp4" autoplay loop muted playsinline></video>
+                                <div class="side-toolbar">
+                                     <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s512.mp4', 's')"><i class="fas fa-globe"></i></div>
+                                     <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr512.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                                     <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r512.mp4', 'r')"><i class="fas fa-user"></i></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="status-badge"><i class="fas fa-times"></i></div>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="t-card fail step-hidden" data-step="3" style="width: 200px;">
-                        <span class="t-label">Put into holder 2</span>
-                        <div class="media-wrapper" data-view-s="static/s522.mp4" data-view-tr="static/tr522.mp4" data-view-r="static/r522.mp4" data-active-view="s">
-                            <video src="static/s522.mp4" autoplay loop muted playsinline></video>
-                            <div class="side-toolbar">
-                                <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s522.mp4', 's')"><i class="fas fa-globe"></i></div>
-                                <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr522.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                                <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r522.mp4', 'r')"><i class="fas fa-user"></i></div>
+                             <div class="status-badge"><i class="fas fa-times"></i></div>
+                         </div>
+                     </div>
+        
+                     <div style="display:flex; flex-direction:column; align-items:center;">
+                         <div class="css-arrow-down step-hidden" data-step="3"></div>
+                         <div class="t-card fail step-hidden" data-step="3" style="width: 200px;">
+                             <span class="t-label">Put into holder 2</span>
+                             <div class="media-wrapper" data-view-s="static/s522.mp4" data-view-tr="static/tr522.mp4" data-view-r="static/r522.mp4" data-active-view="s">
+                                <video src="static/s522.mp4" autoplay loop muted playsinline></video>
+                                <div class="side-toolbar">
+                                     <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s522.mp4', 's')"><i class="fas fa-globe"></i></div>
+                                     <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr522.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                                     <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r522.mp4', 'r')"><i class="fas fa-user"></i></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="status-badge"><i class="fas fa-times"></i></div>
-                    </div>
+                             <div class="status-badge"><i class="fas fa-times"></i></div>
+                         </div>
+                     </div>
                 </div>
             </div>
             
@@ -1578,7 +1715,7 @@
         <div class="task-header-group">
             <div class="task-instruction">
                 <i class="fas fa-user-circle"></i> 
-                Put the apple and pen holder on the drawer, apple in the holder.
+                Place the apple and the holder on the drawer, with the apple inside the holder.
             </div>
         </div>
         
@@ -1599,7 +1736,9 @@
         </div>
         
         <div class="branches-container">
-            <div class="connector-bridge step-hidden" data-step="1"></div>
+            <div class="bridge-split-wrapper">
+                <div class="bridge-half left step-hidden" data-step="1"></div>
+                <div class="bridge-half right step-hidden" data-step="3" data-delay="300"></div> </div>
 
             <!-- Left Branch (Fail) -->
             <div class="branch-col">
@@ -1748,11 +1887,10 @@
         <div class="task-header-group">
             <div class="task-instruction">
                 <i class="fas fa-user-circle"></i> 
-                Put the apple and tennis ball in drawer or holder.
+                Put the apple and the tennis ball in either the drawer or the pen holder, together or separately. Ensure the drawer is closed.
             </div>
         </div>
         
-        <!-- Step 0 -->
         <div class="root-wrapper">
             <div class="t-card">
                 <span class="t-label">Initial State (0)</span>
@@ -1768,18 +1906,16 @@
             <div class="root-line"></div>
         </div>
         
-        <!-- MAIN STRUCTURE: LEFT GROUP vs RIGHT GROUP -->
         <div class="branches-container">
-            <!-- 1. Main Bridge connecting Left Group and Right Group -->
-            <div class="main-bridge step-hidden" data-step="1"></div>
+            
+            <div class="main-bridge-split">
+                 <div class="bridge-half left step-hidden" data-step="1"></div>
+                 <div class="bridge-half right step-hidden" data-step="2"></div>
+            </div>
 
-            <!-- ========================= -->
-            <!-- LEFT GROUP (Nested Tree)  -->
-            <!-- ========================= -->
             <div class="left-group-col">
                 <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
                 
-                <!-- Step 1 -->
                 <div class="t-card step-hidden" data-step="1">
                     <span class="t-label">Pick apple (1)</span>
                     <div class="media-wrapper" data-view-s="static/s721.mp4" data-view-tr="static/tr711.mp4" data-view-r="static/r711.mp4" data-active-view="s">
@@ -1794,7 +1930,6 @@
 
                 <div class="step-arrow-icon step-hidden" data-step="3"><i class="fas fa-arrow-down"></i></div>
 
-                <!-- Step 3 -->
                 <div class="t-card step-hidden" data-step="3">
                     <span class="t-label">Put in holder (3)</span>
                     <div class="media-wrapper" data-view-s="static/s722.mp4" data-view-tr="static/tr712.mp4" data-view-r="static/r712.mp4" data-active-view="s">
@@ -1807,15 +1942,17 @@
                     </div>
                 </div>
 
-                <!-- SUB-BRANCHES (Under Step 3) -->
                 <div class="sub-branches-row">
-                    <!-- Sub Bridge connecting Left, Middle (New Branch), Right -->
-                    <div class="sub-bridge step-hidden" data-step="5">
+                    
+                    <div class="sub-bridge-custom step-hidden" data-step="5" style="top: 25px;">
+                        <div style="position:absolute; left:0; top:-3px; width:3px; height:23px; background:#2c3e50;"></div>
+                        <div style="position:absolute; right:0; top:-3px; width:3px; height:23px; background:#2c3e50;"></div>
+                        <div style="width:100%; height:3px; background:#2c3e50;"></div>
+                        <div class="mid-line" style="position:absolute; left:50%; top:0; width:3px; height:135px; background:#2c3e50; transform:translateX(-50%);"></div>
                     </div>
 
-                    <!-- Sub-Col 1: Step 5 -> 8 (最左侧，位置不变) -->
-                    <div class="branch-col">
-                        <div class="arrow-top-gap css-arrow-down step-hidden" data-step="5"></div>
+                    <div class="branch-col" style="position: relative;">
+                        <div class="arrow-top-gap css-arrow-down step-hidden" data-step="5" style="margin-top: 25px;"></div>
                         
                         <div class="t-card step-hidden" data-step="5">
                             <span class="t-label">Pick tennis (5)</span>
@@ -1827,6 +1964,15 @@
                                     <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r713.mp4', 'r')"><i class="fas fa-user"></i></div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="connector-line-solid step-hidden" data-step="9" data-delay="300" 
+                             style="position: absolute; top: 80px; left: 100%; width: 50px; height: 90px; 
+                                    border-top: 3px solid #2c3e50; border-right: 3px solid #2c3e50; 
+                                    pointer-events: none; z-index:0;">
+                             <div style="position: absolute; bottom: -5px; right: -6px; width: 0; height: 0; 
+                                         border-left: 6px solid transparent; border-right: 6px solid transparent; 
+                                         border-top: 8px solid #2c3e50;"></div>
                         </div>
 
                         <div class="step-arrow-icon step-hidden" data-step="8"><i class="fas fa-arrow-down"></i></div>
@@ -1845,7 +1991,6 @@
                         </div>
                     </div>
 
-                    <!-- Sub-Col 2: New Branch (原本在右侧，现移到中间并下移100pt/135px) -->
                     <div class="branch-col" style="margin-top: 135px;">
                         <div class="new-branch-group step-hidden" data-step="9" data-delay="300">
                             <div class="branch-tag">New Branch</div>
@@ -1922,9 +2067,8 @@
                         </div>
                     </div>
 
-                    <!-- Sub-Col 3: Step 6 -> 9 (原本在中间，现移到右侧) -->
-                    <div class="branch-col">
-                        <div class="arrow-top-gap css-arrow-down step-hidden" data-step="6"></div>
+                    <div class="branch-col" style="position: relative;">
+                        <div class="arrow-top-gap css-arrow-down step-hidden" data-step="6" style="margin-top: 25px;"></div>
 
                         <div class="t-card step-hidden" data-step="6">
                             <span class="t-label">Open drawer (6)</span>
@@ -1951,16 +2095,19 @@
                                 </div>
                             </div>
                             <div class="status-badge"><i class="fas fa-times"></i></div>
+
+                            <div class="connector-line-dashed step-hidden" data-step="9" data-delay="300"
+                                 style="position: absolute; top: -10px; right: 100%; width: 50px; height: 130px; 
+                                        border-top: 3px dashed #7f8c8d; border-left: 3px dashed #7f8c8d; 
+                                        border-top-left-radius: 12px; pointer-events: none; transform: translateY(-100%);">
+                                 <div style="position: absolute; bottom: 0; left: -6px; width: 0; height: 0; 
+                                             border-top: 6px solid transparent; border-bottom: 6px solid transparent; 
+                                             border-left: 8px solid #7f8c8d;"></div>
+                            </div>
                         </div>
                     </div>
 
-                </div> <!-- End Sub-branches-row -->
-            </div> <!-- End Left-group-col -->
-
-            <!-- ========================= -->
-            <!-- RIGHT GROUP (Old Col 4)   -->
-            <!-- ========================= -->
-            <div class="branch-col">
+                </div> </div> <div class="branch-col">
                 <div class="arrow-top-gap css-arrow-down step-hidden" data-step="2"></div>
                 
                 <div class="t-card step-hidden" data-step="2">
