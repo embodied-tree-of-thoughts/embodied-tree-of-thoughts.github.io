@@ -577,6 +577,89 @@
             height: 25px; /* 缩短根连接线 */
             bottom: -25px;
         }
+        /* ========================================= */
+        /* Task 7 特有样式修正 (嵌套结构)              */
+        /* ========================================= */
+        
+        /* 增加主列之间的间距 */
+        #task7 .branches-container {
+            gap: 60px !important;
+            align-items: flex-start;
+        }
+
+        /* 左侧大组容器 */
+        #task7 .left-group-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Step 3 下方的三叉容器 */
+        #task7 .sub-branches-row {
+            display: flex;
+            gap: 10px; /* 子列间距 */
+            position: relative;
+            padding-top: 20px; /* 给连接线留空间 */
+        }
+        
+        /* Step 3 下方的连接横梁 */
+        #task7 .sub-bridge {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%; /* 覆盖三个子列的宽度 */
+            height: 20px;
+            border-top: 3px solid #2c3e50;
+            z-index: 1;
+        }
+        
+        /* 连接横梁的三个向下短竖线 */
+        #task7 .sub-bridge::before,
+        #task7 .sub-bridge::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            width: 3px;
+            height: 23px;
+            background: #2c3e50;
+        }
+        #task7 .sub-bridge::before { left: 0; }
+        #task7 .sub-bridge::after { right: 0; }
+        
+        /* 中间的竖线 */
+        #task7 .sub-bridge .mid-line {
+            position: absolute;
+            left: 50%;
+            top: -3px;
+            width: 3px;
+            height: 23px;
+            background: #2c3e50;
+            transform: translateX(-50%);
+        }
+
+        /* 顶部主横梁 (连接左大组和右大组) */
+        #task7 .main-bridge {
+            position: absolute;
+            top: 0;
+            /* 调整横梁位置以连接左右两大组的中心 */
+            left: 25%; 
+            width: 50%;
+            height: 20px;
+            border-top: 4px solid #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            z-index: 2;
+        }
+        #task7 .main-bridge::before, 
+        #task7 .main-bridge::after {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: #2c3e50;
+            position: relative;
+            top: -4px;
+        }
     </style>
 </head>
 
@@ -1638,10 +1721,6 @@
             </div>
         </div>
     </div>
-
-<!-- ========================================= -->
-    <!-- Task 7: Complex Multi-branch (0.7x Size)  -->
-    <!-- ========================================= -->
     <div class="task-tree-container" id="task7" data-current-step="0" data-max-steps="15">
         <div class="task-label">Task 7</div>
         
@@ -1691,193 +1770,209 @@
             <div class="root-line"></div>
         </div>
         
-        <!-- style updated for tighter gap -->
-        <div class="branches-container" style="gap: 15px; align-items: flex-start;">
-            <div class="connector-bridge step-hidden" data-step="1"></div>
+        <!-- MAIN STRUCTURE: LEFT GROUP vs RIGHT GROUP -->
+        <div class="branches-container">
+            <!-- 1. Main Bridge connecting Left Group and Right Group -->
+            <div class="main-bridge step-hidden" data-step="1"></div>
 
-            <!-- COLUMN 1: Steps 1, 3, 5, 8 (Fail) -->
-            <div class="branch-col">
+            <!-- ========================= -->
+            <!-- LEFT GROUP (Nested Tree)  -->
+            <!-- ========================= -->
+            <div class="left-group-col">
                 <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
                 
+                <!-- Step 1 -->
                 <div class="t-card step-hidden" data-step="1">
                     <span class="t-label">Pick apple (1)</span>
-                    <div class="media-wrapper" data-view-s="static/t7_s1.mp4" data-view-tr="static/t7_tr1.mp4" data-view-r="static/t7_r1.mp4" data-active-view="s">
-                        <video src="static/t7_s1.mp4" autoplay loop muted playsinline></video>
+                    <div class="media-wrapper" data-view-s="static/s721.mp4" data-view-tr="static/tr711.mp4" data-view-r="static/r711.mp4" data-active-view="s">
+                        <video src="static/s721.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s1.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/t7_tr1.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/t7_r1.mp4', 'r')"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s721.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr711.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r711.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="step-arrow-icon step-hidden" data-step="3"><i class="fas fa-arrow-down"></i></div>
-                
+
+                <!-- Step 3 -->
                 <div class="t-card step-hidden" data-step="3">
                     <span class="t-label">Put in holder (3)</span>
-                    <div class="media-wrapper" data-view-s="static/t7_s3.mp4" data-view-tr="static/t7_tr3.mp4" data-view-r="static/t7_r3.mp4" data-active-view="s">
-                        <video src="static/t7_s3.mp4" autoplay loop muted playsinline></video>
+                    <div class="media-wrapper" data-view-s="static/s722.mp4" data-view-tr="static/tr712.mp4" data-view-r="static/r712.mp4" data-active-view="s">
+                        <video src="static/s722.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s3.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/t7_tr3.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/t7_r3.mp4', 'r')"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s722.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr712.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r712.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="step-arrow-icon step-hidden" data-step="5"><i class="fas fa-arrow-down"></i></div>
+                <!-- SUB-BRANCHES (Under Step 3) -->
+                <div class="sub-branches-row">
+                    <!-- Sub Bridge connecting 5, 6, NewBranch -->
+                    <div class="sub-bridge step-hidden" data-step="5">
+                        <div class="mid-line"></div>
+                    </div>
 
-                <div class="t-card step-hidden" data-step="5">
-                    <span class="t-label">Pick tennis (5)</span>
-                    <div class="media-wrapper" data-view-s="static/t7_s5.mp4" data-view-tr="static/t7_tr5.mp4" data-view-r="static/t7_r5.mp4" data-active-view="s">
-                        <video src="static/t7_s5.mp4" autoplay loop muted playsinline></video>
-                        <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s5.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/t7_tr5.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/t7_r5.mp4', 'r')"><i class="fas fa-user"></i></div>
+                    <!-- Sub-Col 1: Step 5 -> 8 -->
+                    <div class="branch-col">
+                        <div class="arrow-top-gap css-arrow-down step-hidden" data-step="5"></div>
+                        
+                        <div class="t-card step-hidden" data-step="5">
+                            <span class="t-label">Pick tennis (5)</span>
+                            <div class="media-wrapper" data-view-s="static/s713.mp4" data-view-tr="static/tr713.mp4" data-view-r="static/r713.mp4" data-active-view="s">
+                                <video src="static/s713.mp4" autoplay loop muted playsinline></video>
+                                <div class="side-toolbar">
+                                    <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s713.mp4', 's')"><i class="fas fa-globe"></i></div>
+                                    <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr713.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                                    <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r713.mp4', 'r')"><i class="fas fa-user"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-arrow-icon step-hidden" data-step="8"><i class="fas fa-arrow-down"></i></div>
+
+                        <div class="t-card fail step-hidden" data-step="8">
+                            <span class="t-label">Put into holder 1 (8)</span>
+                            <div class="media-wrapper" data-view-s="static/s714.mp4" data-view-tr="static/tr714.mp4" data-view-r="static/r714.mp4" data-active-view="s">
+                                <video src="static/s714.mp4" autoplay loop muted playsinline></video>
+                                <div class="side-toolbar">
+                                    <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s714.mp4', 's')"><i class="fas fa-globe"></i></div>
+                                    <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr714.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                                    <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r714.mp4', 'r')"><i class="fas fa-user"></i></div>
+                                </div>
+                            </div>
+                            <div class="status-badge"><i class="fas fa-times"></i></div>
                         </div>
                     </div>
-                </div>
 
-                <div class="step-arrow-icon step-hidden" data-step="8"><i class="fas fa-arrow-down"></i></div>
+                    <!-- Sub-Col 2: Step 6 -> 9 -->
+                    <div class="branch-col">
+                        <div class="arrow-top-gap css-arrow-down step-hidden" data-step="6"></div>
 
-                <div class="t-card fail step-hidden" data-step="8">
-                    <span class="t-label">Put into holder 1 (8)</span>
-                    <div class="media-wrapper" data-view-s="static/t7_s8.mp4" data-view-tr="static/t7_tr8.mp4" data-view-r="static/t7_r8.mp4" data-active-view="s">
-                        <video src="static/t7_s8.mp4" autoplay loop muted playsinline></video>
-                        <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s8.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/t7_tr8.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/t7_r8.mp4', 'r')"><i class="fas fa-user"></i></div>
+                        <div class="t-card step-hidden" data-step="6">
+                            <span class="t-label">Open drawer (6)</span>
+                            <div class="media-wrapper" data-view-s="static/s733.mp4" data-view-tr="static/tr733.mp4" data-view-r="static/r733.mp4" data-active-view="s">
+                                <video src="static/s733.mp4" autoplay loop muted playsinline></video>
+                                <div class="side-toolbar">
+                                    <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s733.mp4', 's')"><i class="fas fa-globe"></i></div>
+                                    <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr733.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                                    <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r733.mp4', 'r')"><i class="fas fa-user"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-arrow-icon step-hidden" data-step="9"><i class="fas fa-arrow-down"></i></div>
+
+                        <div class="t-card fail step-hidden" data-step="9">
+                            <span class="t-label">Pick tennis (9)</span>
+                            <div class="media-wrapper" data-view-s="static/s734.mp4" data-view-tr="static/tr734.mp4" data-view-r="static/r734.mp4" data-active-view="s">
+                                <video src="static/s734.mp4" autoplay loop muted playsinline></video>
+                                <div class="side-toolbar">
+                                    <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s734.mp4', 's')"><i class="fas fa-globe"></i></div>
+                                    <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr734.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                                    <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r734.mp4', 'r')"><i class="fas fa-user"></i></div>
+                                </div>
+                            </div>
+                            <div class="status-badge"><i class="fas fa-times"></i></div>
                         </div>
                     </div>
-                    <div class="status-badge"><i class="fas fa-times"></i></div>
-                </div>
-            </div>
 
-            <!-- COLUMN 2: Branch from 3 -> 6 -> 9 (Fail) -->
-            <!-- Adjusted top padding: 260px * 0.7 = 182px -->
-            <div class="branch-col" style="padding-top: 182px;"> 
-                 <div class="step-arrow-icon step-hidden" data-step="6"><i class="fas fa-arrow-right" style="transform: rotate(45deg);"></i></div>
+                    <!-- Sub-Col 3: New Branch -> 11...15 (Success) -->
+                    <div class="branch-col">
+                        <div class="new-branch-group step-hidden" data-step="11">
+                            <div class="branch-tag">New Branch</div>
+                            <div class="css-arrow-down"></div>
+                        </div>
 
-                 <div class="t-card step-hidden" data-step="6">
-                    <span class="t-label">Open drawer (6)</span>
-                    <div class="media-wrapper" data-view-s="static/t7_s6.mp4" data-view-tr="static/t7_tr6.mp4" data-view-r="static/t7_r6.mp4" data-active-view="s">
-                        <video src="static/t7_s6.mp4" autoplay loop muted playsinline></video>
-                        <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s6.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/t7_tr6.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/t7_r6.mp4', 'r')"><i class="fas fa-user"></i></div>
+                        <div class="t-card step-hidden" data-step="11">
+                            <span class="t-label">Put on drawer (11)</span>
+                            <div class="media-wrapper" data-view-s="static/s724.mp4" data-view-tr="static/tr724.mp4" data-view-r="static/r724.mp4" data-active-view="s">
+                                <video src="static/s724.mp4" autoplay loop muted playsinline></video>
+                                <div class="side-toolbar">
+                                    <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s11.mp4', 's')"><i class="fas fa-globe"></i></div>
+                                    <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr724.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                                    <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r724.mp4', 'r')"><i class="fas fa-user"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-arrow-icon step-hidden" data-step="12"><i class="fas fa-arrow-down"></i></div>
+
+                        <div class="t-card step-hidden" data-step="12">
+                            <span class="t-label">Open drawer (12)</span>
+                            <div class="media-wrapper" data-view-s="static/s725.mp4" data-view-tr="static/tr725.mp4" data-view-r="static/r725.mp4" data-active-view="s">
+                                <video src="static/s725.mp4" autoplay loop muted playsinline></video>
+                                <div class="side-toolbar">
+                                    <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s725.mp4', 's')"><i class="fas fa-globe"></i></div>
+                                    <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr725.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                                    <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r725.mp4', 'r')"><i class="fas fa-user"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-arrow-icon step-hidden" data-step="13"><i class="fas fa-arrow-down"></i></div>
+
+                        <div class="t-card step-hidden" data-step="13">
+                            <span class="t-label">Pick tennis (13)</span>
+                            <div class="media-wrapper" data-view-s="static/s726.mp4" data-view-tr="static/tr726.mp4" data-view-r="static/r726.mp4" data-active-view="s">
+                                <video src="static/s726.mp4" autoplay loop muted playsinline></video>
+                                <div class="side-toolbar">
+                                    <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s726.mp4', 's')"><i class="fas fa-globe"></i></div>
+                                    <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr726.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                                    <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r726.mp4', 'r')"><i class="fas fa-user"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-arrow-icon step-hidden" data-step="14"><i class="fas fa-arrow-down"></i></div>
+
+                        <div class="t-card step-hidden" data-step="14">
+                            <span class="t-label">Put in drawer (14)</span>
+                            <div class="media-wrapper" data-view-s="static/s727.mp4" data-view-tr="static/tr727.mp4" data-view-r="static/r727.mp4" data-active-view="s">
+                                <video src="static/s727.mp4" autoplay loop muted playsinline></video>
+                                <div class="side-toolbar">
+                                    <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s727.mp4', 's')"><i class="fas fa-globe"></i></div>
+                                    <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr727.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                                    <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r727.mp4', 'r')"><i class="fas fa-user"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-arrow-icon step-hidden" data-step="15"><i class="fas fa-arrow-down"></i></div>
+
+                        <div class="t-card success step-hidden" data-step="15">
+                            <span class="t-label">Close drawer (15)</span>
+                            <div class="media-wrapper" data-view-s="static/s728.mp4" data-view-tr="static/tr728.mp4" data-view-r="static/r728.mp4" data-active-view="s">
+                                <video src="static/s728.mp4" autoplay loop muted playsinline></video>
+                                <div class="side-toolbar">
+                                    <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s728.mp4', 's')"><i class="fas fa-globe"></i></div>
+                                    <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr728.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                                    <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r728.mp4', 'r')"><i class="fas fa-user"></i></div>
+                                </div>
+                            </div>
+                            <div class="status-badge"><i class="fas fa-check"></i></div>
                         </div>
                     </div>
-                </div>
+                </div> <!-- End Sub-branches-row -->
+            </div> <!-- End Left-group-col -->
 
-                <div class="step-arrow-icon step-hidden" data-step="9"><i class="fas fa-arrow-down"></i></div>
-
-                <div class="t-card fail step-hidden" data-step="9">
-                    <span class="t-label">Pick tennis (9)</span>
-                    <div class="media-wrapper" data-view-s="static/t7_s9.mp4" data-view-tr="static/t7_tr9.mp4" data-view-r="static/t7_r9.mp4" data-active-view="s">
-                        <video src="static/t7_s9.mp4" autoplay loop muted playsinline></video>
-                        <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s9.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/t7_tr9.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/t7_r9.mp4', 'r')"><i class="fas fa-user"></i></div>
-                        </div>
-                    </div>
-                    <div class="status-badge"><i class="fas fa-times"></i></div>
-                </div>
-            </div>
-
-            <!-- COLUMN 3: New Branch 11 -> 15 (Success) -->
-            <!-- Adjusted top padding: 380px * 0.7 = 266px -->
-            <div class="branch-col" style="padding-top: 266px;"> 
-                <div class="new-branch-group step-hidden" data-step="11">
-                    <div class="branch-tag">New Branch</div>
-                    <div class="css-arrow-down"></div>
-                </div>
-
-                <div class="t-card step-hidden" data-step="11">
-                    <span class="t-label">Put on drawer (11)</span>
-                    <div class="media-wrapper" data-view-s="static/t7_s11.mp4" data-view-tr="static/t7_tr11.mp4" data-view-r="static/t7_r11.mp4" data-active-view="s">
-                        <video src="static/t7_s11.mp4" autoplay loop muted playsinline></video>
-                        <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s11.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/t7_tr11.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/t7_r11.mp4', 'r')"><i class="fas fa-user"></i></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="step-arrow-icon step-hidden" data-step="12"><i class="fas fa-arrow-down"></i></div>
-
-                <div class="t-card step-hidden" data-step="12">
-                    <span class="t-label">Open drawer (12)</span>
-                    <div class="media-wrapper" data-view-s="static/t7_s12.mp4" data-view-tr="static/t7_tr12.mp4" data-view-r="static/t7_r12.mp4" data-active-view="s">
-                        <video src="static/t7_s12.mp4" autoplay loop muted playsinline></video>
-                        <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s12.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/t7_tr12.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/t7_r12.mp4', 'r')"><i class="fas fa-user"></i></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="step-arrow-icon step-hidden" data-step="13"><i class="fas fa-arrow-down"></i></div>
-
-                <div class="t-card step-hidden" data-step="13">
-                    <span class="t-label">Pick tennis (13)</span>
-                    <div class="media-wrapper" data-view-s="static/t7_s13.mp4" data-view-tr="static/t7_tr13.mp4" data-view-r="static/t7_r13.mp4" data-active-view="s">
-                        <video src="static/t7_s13.mp4" autoplay loop muted playsinline></video>
-                        <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s13.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/t7_tr13.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/t7_r13.mp4', 'r')"><i class="fas fa-user"></i></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="step-arrow-icon step-hidden" data-step="14"><i class="fas fa-arrow-down"></i></div>
-
-                <div class="t-card step-hidden" data-step="14">
-                    <span class="t-label">Put in drawer (14)</span>
-                    <div class="media-wrapper" data-view-s="static/t7_s14.mp4" data-view-tr="static/t7_tr14.mp4" data-view-r="static/t7_r14.mp4" data-active-view="s">
-                        <video src="static/t7_s14.mp4" autoplay loop muted playsinline></video>
-                        <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s14.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/t7_tr14.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/t7_r14.mp4', 'r')"><i class="fas fa-user"></i></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="step-arrow-icon step-hidden" data-step="15"><i class="fas fa-arrow-down"></i></div>
-
-                <div class="t-card success step-hidden" data-step="15">
-                    <span class="t-label">Close drawer (15)</span>
-                    <div class="media-wrapper" data-view-s="static/t7_s15.mp4" data-view-tr="static/t7_tr15.mp4" data-view-r="static/t7_r15.mp4" data-active-view="s">
-                        <video src="static/t7_s15.mp4" autoplay loop muted playsinline></video>
-                        <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s15.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/t7_tr15.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/t7_r15.mp4', 'r')"><i class="fas fa-user"></i></div>
-                        </div>
-                    </div>
-                    <div class="status-badge"><i class="fas fa-check"></i></div>
-                </div>
-            </div>
-
-            <!-- COLUMN 4: Right Branch 2 -> 10 (Fail) -->
+            <!-- ========================= -->
+            <!-- RIGHT GROUP (Old Col 4)   -->
+            <!-- ========================= -->
             <div class="branch-col">
                 <div class="arrow-top-gap css-arrow-down step-hidden" data-step="2"></div>
                 
                 <div class="t-card step-hidden" data-step="2">
                     <span class="t-label">Open drawer (2)</span>
-                    <div class="media-wrapper" data-view-s="static/t7_s2.mp4" data-view-tr="static/t7_tr2.mp4" data-view-r="static/t7_r2.mp4" data-active-view="s">
-                        <video src="static/t7_s2.mp4" autoplay loop muted playsinline></video>
+                    <div class="media-wrapper" data-view-s="static/s741.mp4" data-view-tr="static/tr741.mp4" data-view-r="static/r741.mp4" data-active-view="s">
+                        <video src="static/s741.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s2.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/t7_tr2.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/t7_r2.mp4', 'r')"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s741.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr741.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r741.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                 </div>
@@ -1886,12 +1981,12 @@
 
                 <div class="t-card step-hidden" data-step="4">
                     <span class="t-label">Pick apple (4)</span>
-                    <div class="media-wrapper" data-view-s="static/t7_s4.mp4" data-view-tr="static/t7_tr4.mp4" data-view-r="static/t7_r4.mp4" data-active-view="s">
-                        <video src="static/t7_s4.mp4" autoplay loop muted playsinline></video>
+                    <div class="media-wrapper" data-view-s="static/s742.mp4" data-view-tr="static/tr742.mp4" data-view-r="static/r742.mp4" data-active-view="s">
+                        <video src="static/s742.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s4.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/t7_tr4.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/t7_r4.mp4', 'r')"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s742.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr742.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r742.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                 </div>
@@ -1900,12 +1995,12 @@
 
                 <div class="t-card step-hidden" data-step="7">
                     <span class="t-label">Put in drawer (7)</span>
-                    <div class="media-wrapper" data-view-s="static/t7_s7.mp4" data-view-tr="static/t7_tr7.mp4" data-view-r="static/t7_r7.mp4" data-active-view="s">
-                        <video src="static/t7_s7.mp4" autoplay loop muted playsinline></video>
+                    <div class="media-wrapper" data-view-s="static/s743.mp4" data-view-tr="static/tr743.mp4" data-view-r="static/r743.mp4" data-active-view="s">
+                        <video src="static/s743.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s7.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/t7_tr7.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/t7_r7.mp4', 'r')"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s743.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr743.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r743.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                 </div>
@@ -1914,12 +2009,12 @@
 
                 <div class="t-card fail step-hidden" data-step="10">
                     <span class="t-label">Close drawer (10)</span>
-                    <div class="media-wrapper" data-view-s="static/t7_s10.mp4" data-view-tr="static/t7_tr10.mp4" data-view-r="static/t7_r10.mp4" data-active-view="s">
-                        <video src="static/t7_s10.mp4" autoplay loop muted playsinline></video>
+                    <div class="media-wrapper" data-view-s="static/s744.mp4" data-view-tr="static/tr744.mp4" data-view-r="static/r744.mp4" data-active-view="s">
+                        <video src="static/s744.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
-                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/t7_s10.mp4', 's')"><i class="fas fa-globe"></i></div>
-                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/t7_tr10.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/t7_r10.mp4', 'r')"><i class="fas fa-user"></i></div>
+                            <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s744.mp4', 's')"><i class="fas fa-globe"></i></div>
+                            <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr744.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                            <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r744.mp4', 'r')"><i class="fas fa-user"></i></div>
                         </div>
                     </div>
                     <div class="status-badge"><i class="fas fa-times"></i></div>
