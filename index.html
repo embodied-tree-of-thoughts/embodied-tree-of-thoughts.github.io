@@ -659,12 +659,12 @@
             top: -4px;
         }
         .root-wrapper{ position:relative; }
-        / 左右两段都绝对定位，方便独立控制 /
+
         .root-line-left,
         .root-line-right{
         position:absolute;
-        bottom:-37px;          / 与原 root-line 相同 /
-        width:2px;             / 可随意调粗细 */
+        bottom:-37px;          
+        width:2px;          
         height:37px;
         background:#2c3e50;
         z-index:1;
@@ -675,7 +675,7 @@
         position:absolute;
         top:0; left:50%;
         transform:translateX(-50%);
-        width:160px;           / 覆盖左右两个 220px 卡片的中心距 */
+        width:160px;       
         height:20px;
         border-top:4px solid #2c3e50;
         z-index:2;
@@ -690,30 +690,29 @@
         }
         .task5-bridge::before{ left:0;  }
         .task5-bridge::after{ right:0; }
-        .t7-main-bridge{          / 已存在，只把宽度加大即可 /
-        width:420px !important; / 让左右两段分别对准 (1)(2) 中心 /
+        .t7-main-bridge{       
+        width:420px !important; 
         }
-        .t7-sub-bridge{           / (3) 下方横梁整体下移 15px /
+        .t7-sub-bridge{      
         top:15px !important;
         }
-        / 从 (9) 到 New Branch 的虚斜线 /
         .t9-to-nb{
         position:absolute;
-        top:-135px;               / 因为 New Branch 下移了 135px /
+        top:-135px;           
         left:50%;
         width:70px;
         height:135px;
         background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='135'%3E%3Cpath d='M0 0 L70 135' stroke='%237f8c8d' stroke-width='3' stroke-dasharray='8,5' fill='none'/%3E%3C/svg%3E") no-repeat;
         z-index:1;
         }
-        / 从 (5) 右侧出发的直角实线 /
+
         .t5-right-angle{
         position:absolute;
         top:50%; right:-50px;
         width:50px; height:3px;
         background:#2c3e50;
         }
-        .t5-right-angle::after{   / 向下折 */
+        .t5-right-angle::after{
         content:'';
         position:absolute;
         top:0; right:0;
