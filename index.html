@@ -921,7 +921,7 @@
                       marker-end="url(#arrowhead1)"/>
             </svg>
         
-            <div class="bridge-split-wrapper" style="left: 20%; transform: translateX(-100%);"> 
+            <div class="bridge-split-wrapper" style="left: 20%; transform: translateX(0%);"> 
                  <div class="bridge-half left step-hidden" data-step="1"></div>
                 <div class="bridge-half right step-hidden" data-step="1" data-delay="300"></div>
             </div>
@@ -1071,7 +1071,6 @@
             </div>
         
             <div class="branch-col">
-                <div class="arrow-top-gap css-arrow-down step-hidden" data-step="2"></div>
                 <div class="t-card fail step-hidden" data-step="2" data-id="step2_2_fail">
                     <span class="t-label">Put into holder 1</span>
                     <div class="media-wrapper" data-view-s="static/s212.mp4" data-view-tr="static/tr212.mp4" data-view-r="static/r212.mp4" data-active-view="s">
@@ -1087,7 +1086,6 @@
             </div>
 
             <div class="branch-col">
-                <div class="arrow-top-gap css-arrow-down step-hidden" data-step="3"></div>
                 <div class="t-card success step-hidden" data-step="3" data-id="step2_3_success">
                     <span class="t-label">Put into holder 2</span>
                     <div class="media-wrapper" data-view-s="static/s222.mp4" data-view-tr="static/tr222.mp4" data-view-r="static/r222.mp4" data-active-view="s">
@@ -1554,7 +1552,6 @@
             </div>
         
             <div class="branch-col" style="width: auto; align-items: center;">
-                <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
                 
                 <div class="t-card step-hidden" data-step="1">
                     <span class="t-label">Pick up the pen</span>
@@ -1615,7 +1612,6 @@
             <!-- Right Branch: New Branch -->
             <div class="branch-col">
                 <div class="new-branch-group step-hidden" data-step="3" data-delay="300">
-                    <div class="line-segment"></div>
                     <div class="branch-tag">New Branch</div>
                     <div class="line-segment" style="height: 5px;"></div>
                     <div class="css-arrow-down" style="margin-bottom: 5px;"></div>
@@ -1908,10 +1904,10 @@
         
         <div class="branches-container">
             
-            <div class="main-bridge-split">
-                 <div class="bridge-half left step-hidden" data-step="1"></div>
-                 <div class="bridge-half right step-hidden" data-step="2"></div>
-            </div>
+            <div class="main-bridge-split" style="left: 62.5%;">
+                <div class="bridge-half left step-hidden" data-step="1"></div>
+                <div class="bridge-half right step-hidden" data-step="1" data-delay="100"></div>
+           </div>
 
             <div class="left-group-col">
                 <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
@@ -1948,7 +1944,7 @@
                         <div style="position:absolute; left:0; top:-3px; width:3px; height:23px; background:#2c3e50;"></div>
                         <div style="position:absolute; right:0; top:-3px; width:3px; height:23px; background:#2c3e50;"></div>
                         <div style="width:100%; height:3px; background:#2c3e50;"></div>
-                        <div class="mid-line" style="position:absolute; left:50%; top:0; width:3px; height:135px; background:#2c3e50; transform:translateX(-50%);"></div>
+                        <div class="mid-line" style="position:absolute; left:50%; top:0; width:3px; height:-30px; background:#2c3e50; transform:translateX(-50%);"></div>
                     </div>
 
                     <div class="branch-col" style="position: relative;">
@@ -2097,13 +2093,25 @@
                             <div class="status-badge"><i class="fas fa-times"></i></div>
 
                             <div class="connector-line-dashed step-hidden" data-step="9" data-delay="300"
-                                 style="position: absolute; top: -10px; right: 100%; width: 50px; height: 130px; 
-                                        border-top: 3px dashed #7f8c8d; border-left: 3px dashed #7f8c8d; 
-                                        border-top-left-radius: 12px; pointer-events: none; transform: translateY(-100%);">
-                                 <div style="position: absolute; bottom: 0; left: -6px; width: 0; height: 0; 
-                                             border-top: 6px solid transparent; border-bottom: 6px solid transparent; 
-                                             border-left: 8px solid #7f8c8d;"></div>
-                            </div>
+                                style="position: absolute; 
+                                        top: 0px;             /* 调整垂直起点：从卡片顶部（0px）开始 */
+                                        right: 100%;          /* 调整水平起点：紧贴卡片左侧边缘 */
+                                        width: 3px;           /* 设为线的宽度 */
+                                        height: 150px;        /* 线的长度（向上延伸的距离，需要根据布局调整） */
+                                        
+                                        border-top: none;     /* [关键修改] 移除横线 */
+                                        border-left: 3px dashed #7f8c8d; /* 仅保留竖线 */
+                                        border-top-left-radius: 0; /* 移除圆角 */
+                                        pointer-events: none; 
+                                        transform: translateY(-100%);">
+                                
+                                <div style="position: absolute; 
+                                            bottom: 0; /* 箭头位于线的末端 */
+                                            left: -8px; /* 调整位置 */
+                                            width: 0; height: 0; 
+                                            border-top: 8px solid transparent; 
+                                            border-bottom: 8px solid transparent; 
+                                            border-left: 8px solid #7f8c8d;"></div> </div>
                         </div>
                     </div>
 
