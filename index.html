@@ -779,6 +779,33 @@
             opacity: 1;
             stroke-dashoffset: 0;
         }
+        /* 动态连线 SVG 的容器样式 */
+        .dynamic-lines-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* 确保鼠标可以穿透连线点击下方的视频 */
+            z-index: 5; /* 在连线桥之上，但在卡片之下 */
+            overflow: visible;
+        }
+        
+        /* 连线路径样式 */
+        .connection-path {
+            fill: none;
+            stroke: #7f8c8d;
+            stroke-width: 3;
+            stroke-dasharray: 8, 5; /* 虚线效果 */
+            stroke-linejoin: round;
+            opacity: 0; /* 初始隐藏，由 JS 控制显示 */
+            transition: opacity 0.5s ease;
+        }
+        
+        /* 当父级移除 step-hidden 类时，显示路径 */
+        .step-visible .connection-path {
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -1255,13 +1282,21 @@
         </div>
         
         <div class="branches-container">
+            <svg class="dynamic-lines-svg step-hidden" data-step="1" data-delay="300">
+            <defs>
+                <marker id="arrow-t4" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="#7f8c8d" />
+                </marker>
+            </defs>
+                <path id="path-t4" class="connection-path" marker-end="url(#arrow-t4)" d="" />
+            </svg>
             <div class="bridge-split-wrapper">
                 <div class="bridge-half left step-hidden" data-step="1"></div>
                 <div class="bridge-half right step-hidden" data-step="1" data-delay="300"></div>
             </div>
         
             <div class="branch-col">
-                <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1"></div>
+                <div class="arrow-top-gap css-arrow-down step-hidden" data-step="1" id="t4-fail-node"></div>
                 <div class="t-card fail step-hidden" data-step="1">
                     <span class="t-label">Close the drawer</span>
                     <div class="media-wrapper" data-view-s="static/s411.mp4" data-view-tr="static/tr411.mp4" data-view-r="static/r411.mp4" data-active-view="s">
@@ -1279,7 +1314,7 @@
             <!-- Right Branch: Step 2, 3, 4 (Sequence) -->
             <div class="branch-col">
                 <!-- New Branch Tag -->
-                <div class="new-branch-group step-hidden" data-step="1" data-delay="300">
+                <div class="new-branch-group step-hidden" data-step="1" data-delay="300" id="t4-target-branch">
                     <div class="line-segment"></div>
                     <div class="branch-tag">New Branch</div>
                     <div class="line-segment" style="height: 5px;"></div>
@@ -1546,7 +1581,14 @@
         
         <!-- Adjusted gap to 180px to separate the big left group from the right group -->
         <div class="branches-container" style="gap: 80px; position: relative; padding-top: 0;">
-    
+            <svg class="dynamic-lines-svg step-hidden" data-step="3" data-delay="300">
+                <defs>
+                    <marker id="arrow-t5" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#7f8c8d" />
+                    </marker>
+                </defs>
+                <path id="path-t5" class="connection-path" marker-end="url(#arrow-t5)" d="" />
+            </svg>
             <div class="bridge-split-wrapper" style="top: 0; left: 50%; width: 500px;"> <div class="bridge-half left step-hidden" data-step="1"></div>
                 <div class="bridge-half right step-hidden" data-step="3" data-delay="300"></div>
             </div>
@@ -1593,7 +1635,7 @@
         
                      <div style="display:flex; flex-direction:column; align-items:center;">
                          <div class="css-arrow-down step-hidden" data-step="3"></div>
-                         <div class="t-card fail step-hidden" data-step="3" style="width: 200px;">
+                         <div class="t-card fail step-hidden" data-step="3" style="width: 200px;" id="t5-fail-node">
                              <span class="t-label">Put into holder 2</span>
                              <div class="media-wrapper" data-view-s="static/s522.mp4" data-view-tr="static/tr522.mp4" data-view-r="static/r522.mp4" data-active-view="s">
                                 <video src="static/s522.mp4" autoplay loop muted playsinline></video>
@@ -1611,7 +1653,7 @@
             
             <!-- Right Branch: New Branch -->
             <div class="branch-col">
-                <div class="new-branch-group step-hidden" data-step="3" data-delay="300">
+                <div class="new-branch-group step-hidden" data-step="3" data-delay="300" id="t5-target-branch">
                     <div class="branch-tag">New Branch</div>
                     <div class="line-segment" style="height: 5px;"></div>
                     <div class="css-arrow-down" style="margin-bottom: 5px;"></div>
@@ -1734,6 +1776,14 @@
         </div>
         
         <div class="branches-container">
+            <svg class="dynamic-lines-svg step-hidden" data-step="3" data-delay="300">
+                <defs>
+                    <marker id="arrow-t6" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#7f8c8d" />
+                    </marker>
+                </defs>
+                <path id="path-t6" class="connection-path" marker-end="url(#arrow-t6)" d="" />
+            </svg>
             <div class="bridge-split-wrapper">
                 <div class="bridge-half left step-hidden" data-step="1"></div>
                 <div class="bridge-half right step-hidden" data-step="3" data-delay="300"></div> </div>
@@ -1772,8 +1822,8 @@
                 <div class="step-arrow-icon step-hidden" data-step="3"><i class="fas fa-arrow-down"></i></div>
 
                 <!-- Step 3 (Fail) -->
-                <div class="t-card fail step-hidden" data-step="3">
-                    <span class="t-label">Pick up the holder (3)</span>
+                <div class="t-card fail step-hidden" data-step="3" id="t6-fail-node">
+                    <span class="t-label">Pick up the holder</span>
                     <div class="media-wrapper" data-view-s="static/s613.mp4" data-view-tr="static/tr613.mp4" data-view-r="static/r613.mp4" data-active-view="s">
                         <video src="static/s613.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
@@ -1797,7 +1847,7 @@
 
                 <!-- Step 4 -->
                 <div class="t-card step-hidden" data-step="4">
-                    <span class="t-label">Pick up the holder (4)</span>
+                    <span class="t-label">Pick up the holder</span>
                     <div class="media-wrapper" data-view-s="static/s621.mp4" data-view-tr="static/tr621.mp4" data-view-r="static/r621.mp4" data-active-view="s">
                         <video src="static/s621.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
@@ -1812,7 +1862,7 @@
                 
                 <!-- Step 5 -->
                 <div class="t-card step-hidden" data-step="5">
-                    <span class="t-label">Put on the drawer (5)</span>
+                    <span class="t-label">Put on the drawer</span>
                     <div class="media-wrapper" data-view-s="static/s622.mp4" data-view-tr="static/tr622.mp4" data-view-r="static/r622.mp4" data-active-view="s">
                         <video src="static/s622.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
@@ -1827,7 +1877,7 @@
 
                 <!-- Step 6 -->
                 <div class="t-card step-hidden" data-step="6">
-                    <span class="t-label">Pick up the apple (6)</span>
+                    <span class="t-label">Pick up the apple</span>
                     <div class="media-wrapper" data-view-s="static/s623.mp4" data-view-tr="static/tr623.mp4" data-view-r="static/r623.mp4" data-active-view="s">
                         <video src="static/s623.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
@@ -1842,7 +1892,7 @@
 
                 <!-- Step 7 -->
                 <div class="t-card success step-hidden" data-step="7">
-                    <span class="t-label">Put into holder (7)</span>
+                    <span class="t-label">Put into holder</span>
                     <div class="media-wrapper" data-view-s="static/s624.mp4" data-view-tr="static/tr624.mp4" data-view-r="static/r624.mp4" data-active-view="s">
                         <video src="static/s624.mp4" autoplay loop muted playsinline></video>
                         <div class="side-toolbar">
@@ -2350,6 +2400,97 @@
     // 确保 Initial State 的 media-wrapper 具有 data-active-view 属性
     // 并将所有 changeImage/changeVideo 调用替换为 changeMedia，
     // 同时为视频卡片的 media-wrapper 添加 data-view-s, data-view-tr, data-view-r 属性以便全局切换调用。
+
+    /* ========================================= */
+/* 动态绘制虚线连接逻辑 (Task 4, 5, 6)      */
+/* ========================================= */
+
+    function drawDynamicLines() {
+        // 定义需要绘制的任务配置
+        const connections = [
+            {
+                taskId: 'task4',
+                startId: 't4-fail-node',
+                endId: 't4-target-branch',
+                pathId: 'path-t4',
+                type: 'center-align' // Task 4: 对齐到容器中心(Initial State位置)
+            },
+            {
+                taskId: 'task5',
+                startId: 't5-fail-node',
+                endId: 't5-target-branch',
+                pathId: 'path-t5',
+                type: 'average-align' // Task 5: 对齐到两者中间
+            },
+            {
+                taskId: 'task6',
+                startId: 't6-fail-node',
+                endId: 't6-target-branch',
+                pathId: 'path-t6',
+                type: 'center-align' // Task 6: 同 Task 4
+            }
+        ];
+    
+        connections.forEach(conf => {
+            const taskContainer = document.getElementById(conf.taskId);
+            const startEl = document.getElementById(conf.startId);
+            const endEl = document.getElementById(conf.endId);
+            const pathEl = document.getElementById(conf.pathId);
+            
+            // 确保所有元素都存在，否则跳过
+            if (!taskContainer || !startEl || !endEl || !pathEl) return;
+            
+            // 获取 SVG 容器 (它是 .branches-container 的子元素，且是 absolute full size)
+            const svgContainer = pathEl.closest('svg');
+            const svgRect = svgContainer.getBoundingClientRect();
+            
+            const startRect = startEl.getBoundingClientRect();
+            const endRect = endEl.getBoundingClientRect();
+    
+            // 1. 计算相对于 SVG 容器的坐标
+            
+            // 起点：红色方框底部中心
+            const startX = (startRect.left + startRect.width / 2) - svgRect.left;
+            const startY = startRect.bottom - svgRect.top;
+    
+            // 终点：New Branch 标签的左侧中心
+            const endX = endRect.left - svgRect.left - 5; // 减5px给箭头留点空隙
+            const endY = (endRect.top + endRect.height / 2) - svgRect.top;
+    
+            // 2. 计算中间转折点的 X 坐标
+            let turnX = 0;
+            
+            if (conf.type === 'center-align') {
+                // Task 4 & 6: 对齐 Initial State (即 Task 容器的中轴线)
+                // 简单起见，使用 SVG 容器宽度的一半，因为 branches-container 是居中的
+                turnX = svgRect.width / 2;
+            } else if (conf.type === 'average-align') {
+                // Task 5: 对齐起点和终点的平均 X 值
+                turnX = (startX + endX) / 2;
+            }
+    
+            // 下移距离 (从红框底部向下延伸多少)
+            const downDistance = 35;
+    
+            // 3. 构建 Path 字符串
+            // 逻辑：M(起点) -> 下移 -> 水平移动到中轴 -> 上移到终点高度 -> 水平移动到终点
+            
+            let d = `M ${startX} ${startY}`;
+            d += ` L ${startX} ${startY + downDistance}`; // 向下
+            d += ` L ${turnX} ${startY + downDistance}`;  // 向右(或左)到中轴
+            d += ` L ${turnX} ${endY}`;                   // 向上到终点高度
+            d += ` L ${endX} ${endY}`;                    // 向右连到终点
+    
+            pathEl.setAttribute('d', d);
+        });
+    }
+    
+    // 页面加载完成后绘制
+    window.addEventListener('load', drawDynamicLines);
+    // 窗口大小改变时重绘 (响应式)
+    window.addEventListener('resize', drawDynamicLines);
+    // 如果有图片加载导致布局变化，建议延迟再画一次
+    setTimeout(drawDynamicLines, 1000);
     
 </script>
 
