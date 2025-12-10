@@ -477,22 +477,24 @@
         
         /* 1. 容器与列宽 */
         #task7 .t-card {
-            width: 154px; /* 原220px * 0.7 */
+            width: 154px; 
             border-width: 2px;
             padding: 3px;
         }
         
         #task7 .branch-col {
-            width: 154px; /* 原220px * 0.7 */
+            width: 154px; 
         }
         
+        /* --- 修改点 1: 增加主列间距，使最右侧大组向右移 --- */
         #task7 .branches-container {
-            gap: 45px !important; /* 缩小列间距 */
+            gap: 110px !important; /* 原60px -> 110px (增加约30pt/40px) */
+            align-items: flex-start;
         }
 
-        /* 2. 字体与标签 */
+        /* 2. 字体与标签 (保持不变) */
         #task7 .t-label {
-            font-size: 9px;       /* 缩小字体 */
+            font-size: 9px;       
             padding: 1px 8px;
             top: -11px;
             border-radius: 8px;
@@ -504,12 +506,12 @@
         }
         
         #task7 .task-label {
-            font-size: 18px; /* 标题也稍微缩小 */
+            font-size: 18px; 
         }
 
-        /* 3. 按钮与图标 */
+        /* 3. 按钮与图标 (保持不变) */
         #task7 .view-btn {
-            width: 20px;       /* 原28px * 0.7 */
+            width: 20px;       
             height: 20px;
             font-size: 9px;
             border-radius: 4px;
@@ -517,7 +519,7 @@
         }
         
         #task7 .side-toolbar {
-            right: -28px;      /* 调整侧边栏距离 */
+            right: -28px;      
             gap: 4px;
         }
         
@@ -534,7 +536,7 @@
             margin: 6px 0;
         }
 
-        /* 4. 线条与箭头 */
+        /* 4. 线条与箭头 (保持不变) */
         #task7 .line-segment {
             width: 3px;
         }
@@ -553,7 +555,7 @@
         }
         
         #task7 .next-step-btn {
-            width: 35px;       /* 全局控制按钮也缩小以匹配整体风格 */
+            width: 35px;       
             height: 35px;
             font-size: 14px;
         }
@@ -574,19 +576,14 @@
              width: 154px;
         }
         #task7 .root-wrapper .root-line {
-            height: 25px; /* 缩短根连接线 */
+            height: 25px; 
             bottom: -25px;
         }
+
         /* ========================================= */
         /* Task 7 特有样式修正 (嵌套结构)              */
         /* ========================================= */
         
-        /* 增加主列之间的间距 */
-        #task7 .branches-container {
-            gap: 60px !important;
-            align-items: flex-start;
-        }
-
         /* 左侧大组容器 */
         #task7 .left-group-col {
             display: flex;
@@ -594,12 +591,13 @@
             align-items: center;
         }
 
+        /* --- 修改点 2: 增加子列间距 --- */
         /* Step 3 下方的三叉容器 */
         #task7 .sub-branches-row {
             display: flex;
-            gap: 10px; /* 子列间距 */
+            gap: 50px; /* 原10px -> 50px (左右各推开约30pt) */
             position: relative;
-            padding-top: 20px; /* 给连接线留空间 */
+            padding-top: 20px; 
         }
         
         /* Step 3 下方的连接横梁 */
@@ -608,7 +606,7 @@
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%; /* 覆盖三个子列的宽度 */
+            width: 90%; 
             height: 20px;
             border-top: 3px solid #2c3e50;
             z-index: 1;
@@ -627,13 +625,14 @@
         #task7 .sub-bridge::before { left: 0; }
         #task7 .sub-bridge::after { right: 0; }
         
+        /* --- 修改点 3: 加长中间的连接线以适应下移 --- */
         /* 中间的竖线 */
         #task7 .sub-bridge .mid-line {
             position: absolute;
             left: 50%;
             top: -3px;
             width: 3px;
-            height: 23px;
+            height: 158px; /* 原23px + 135px (100pt下移量) */
             background: #2c3e50;
             transform: translateX(-50%);
         }
@@ -642,7 +641,6 @@
         #task7 .main-bridge {
             position: absolute;
             top: 0;
-            /* 调整横梁位置以连接左右两大组的中心 */
             left: 25%; 
             width: 50%;
             height: 20px;
@@ -1811,12 +1809,12 @@
 
                 <!-- SUB-BRANCHES (Under Step 3) -->
                 <div class="sub-branches-row">
-                    <!-- Sub Bridge connecting 5, 6, NewBranch -->
+                    <!-- Sub Bridge connecting Left, Middle (New Branch), Right -->
                     <div class="sub-bridge step-hidden" data-step="5">
                         <div class="mid-line"></div>
                     </div>
 
-                    <!-- Sub-Col 1: Step 5 -> 8 -->
+                    <!-- Sub-Col 1: Step 5 -> 8 (最左侧，位置不变) -->
                     <div class="branch-col">
                         <div class="arrow-top-gap css-arrow-down step-hidden" data-step="5"></div>
                         
@@ -1848,40 +1846,8 @@
                         </div>
                     </div>
 
-                    <!-- Sub-Col 2: Step 6 -> 9 -->
-                    <div class="branch-col">
-                        <div class="arrow-top-gap css-arrow-down step-hidden" data-step="6"></div>
-
-                        <div class="t-card step-hidden" data-step="6">
-                            <span class="t-label">Open drawer (6)</span>
-                            <div class="media-wrapper" data-view-s="static/s733.mp4" data-view-tr="static/tr733.mp4" data-view-r="static/r733.mp4" data-active-view="s">
-                                <video src="static/s733.mp4" autoplay loop muted playsinline></video>
-                                <div class="side-toolbar">
-                                    <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s733.mp4', 's')"><i class="fas fa-globe"></i></div>
-                                    <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr733.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                                    <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r733.mp4', 'r')"><i class="fas fa-user"></i></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="step-arrow-icon step-hidden" data-step="9"><i class="fas fa-arrow-down"></i></div>
-
-                        <div class="t-card fail step-hidden" data-step="9">
-                            <span class="t-label">Pick tennis (9)</span>
-                            <div class="media-wrapper" data-view-s="static/s734.mp4" data-view-tr="static/tr734.mp4" data-view-r="static/r734.mp4" data-active-view="s">
-                                <video src="static/s734.mp4" autoplay loop muted playsinline></video>
-                                <div class="side-toolbar">
-                                    <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s734.mp4', 's')"><i class="fas fa-globe"></i></div>
-                                    <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr734.mp4', 'tr')"><i class="fas fa-camera"></i></div>
-                                    <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r734.mp4', 'r')"><i class="fas fa-user"></i></div>
-                                </div>
-                            </div>
-                            <div class="status-badge"><i class="fas fa-times"></i></div>
-                        </div>
-                    </div>
-
-                    <!-- Sub-Col 3: New Branch -> 11...15 (Success) -->
-                    <div class="branch-col">
+                    <!-- Sub-Col 2: New Branch (原本在右侧，现移到中间并下移100pt/135px) -->
+                    <div class="branch-col" style="margin-top: 135px;">
                         <div class="new-branch-group step-hidden" data-step="11">
                             <div class="branch-tag">New Branch</div>
                             <div class="css-arrow-down"></div>
@@ -1956,6 +1922,39 @@
                             <div class="status-badge"><i class="fas fa-check"></i></div>
                         </div>
                     </div>
+
+                    <!-- Sub-Col 3: Step 6 -> 9 (原本在中间，现移到右侧) -->
+                    <div class="branch-col">
+                        <div class="arrow-top-gap css-arrow-down step-hidden" data-step="6"></div>
+
+                        <div class="t-card step-hidden" data-step="6">
+                            <span class="t-label">Open drawer (6)</span>
+                            <div class="media-wrapper" data-view-s="static/s733.mp4" data-view-tr="static/tr733.mp4" data-view-r="static/r733.mp4" data-active-view="s">
+                                <video src="static/s733.mp4" autoplay loop muted playsinline></video>
+                                <div class="side-toolbar">
+                                    <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s733.mp4', 's')"><i class="fas fa-globe"></i></div>
+                                    <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr733.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                                    <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r733.mp4', 'r')"><i class="fas fa-user"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-arrow-icon step-hidden" data-step="9"><i class="fas fa-arrow-down"></i></div>
+
+                        <div class="t-card fail step-hidden" data-step="9">
+                            <span class="t-label">Pick tennis (9)</span>
+                            <div class="media-wrapper" data-view-s="static/s734.mp4" data-view-tr="static/tr734.mp4" data-view-r="static/r734.mp4" data-active-view="s">
+                                <video src="static/s734.mp4" autoplay loop muted playsinline></video>
+                                <div class="side-toolbar">
+                                    <div class="view-btn btn-blue active" onclick="changeMedia(this, null, 'static/s734.mp4', 's')"><i class="fas fa-globe"></i></div>
+                                    <div class="view-btn btn-yellow" onclick="changeMedia(this, null, 'static/tr734.mp4', 'tr')"><i class="fas fa-camera"></i></div>
+                                    <div class="view-btn btn-dark" onclick="changeMedia(this, null, 'static/r734.mp4', 'r')"><i class="fas fa-user"></i></div>
+                                </div>
+                            </div>
+                            <div class="status-badge"><i class="fas fa-times"></i></div>
+                        </div>
+                    </div>
+
                 </div> <!-- End Sub-branches-row -->
             </div> <!-- End Left-group-col -->
 
