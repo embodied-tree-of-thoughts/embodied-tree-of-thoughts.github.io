@@ -1904,7 +1904,7 @@
         
         <div class="branches-container">
             
-            <div class="main-bridge-split" style="left: 62.5%;">
+            <div class="main-bridge-split" style="left: 20.5%;">
                 <div class="bridge-half left step-hidden" data-step="1"></div>
                 <div class="bridge-half right step-hidden" data-step="1" data-delay="100"></div>
            </div>
@@ -1937,7 +1937,7 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="step-arrow-icon step-hidden" data-step="5"><i class="fas fa-arrow-down"></i></div>
                 <div class="sub-branches-row">
                     
                     <div class="sub-bridge-custom step-hidden" data-step="5" style="top: 25px;">
@@ -1963,12 +1963,18 @@
                         </div>
 
                         <div class="connector-line-solid step-hidden" data-step="9" data-delay="300" 
-                             style="position: absolute; top: 80px; left: 100%; width: 50px; height: 90px; 
-                                    border-top: 3px solid #2c3e50; border-right: 3px solid #2c3e50; 
-                                    pointer-events: none; z-index:0;">
-                             <div style="position: absolute; bottom: -5px; right: -6px; width: 0; height: 0; 
-                                         border-left: 6px solid transparent; border-right: 6px solid transparent; 
-                                         border-top: 8px solid #2c3e50;"></div>
+                        style="position: absolute; 
+                               top: 80px; 
+                               left: 100%; 
+                               width: 80px;       /* [修改 1] 增加宽度，将转弯点向右移 */
+                               height: 70px;      /* [修改 2] 减小高度，将终点向上移 */
+                               border-top: 3px solid #2c3e50; 
+                               border-right: 3px solid #2c3e50; 
+                               pointer-events: none; 
+                               z-index:0;">
+                            <div style="position: absolute; bottom: -5px; right: -6px; width: 0; height: 0; 
+                                        border-left: 6px solid transparent; border-right: 6px solid transparent; 
+                                        border-top: 8px solid #2c3e50;"></div>
                         </div>
 
                         <div class="step-arrow-icon step-hidden" data-step="8"><i class="fas fa-arrow-down"></i></div>
@@ -2094,24 +2100,31 @@
 
                             <div class="connector-line-dashed step-hidden" data-step="9" data-delay="300"
                                 style="position: absolute; 
-                                        top: 0px;             /* 调整垂直起点：从卡片顶部（0px）开始 */
-                                        right: 100%;          /* 调整水平起点：紧贴卡片左侧边缘 */
-                                        width: 3px;           /* 设为线的宽度 */
-                                        height: 150px;        /* 线的长度（向上延伸的距离，需要根据布局调整） */
+                                        top: 5px;             /* 线的起始点在 Step 9 卡片顶部向下偏移 5px */
+                                        right: 100%;          /* 紧贴卡片左侧 */
+                                        width: 3px;           /* 线的宽度 */
+                                        height: 150px;        /* 线的长度（需要根据 New Branch 的高度精确调整） */
                                         
-                                        border-top: none;     /* [关键修改] 移除横线 */
+                                        border-top: none;     /* 移除横线 */
                                         border-left: 3px dashed #7f8c8d; /* 仅保留竖线 */
-                                        border-top-left-radius: 0; /* 移除圆角 */
+                                        
+                                        /* [关键修改] 实现对角连接 */
+                                        transform-origin: top left; /* 旋转的基点是盒子的左上角 */
+                                        transform: rotate(-30deg) translateY(-100%); /* 旋转 -30 度（向左上方倾斜），然后整体上移 */
+                                        
                                         pointer-events: none; 
-                                        transform: translateY(-100%);">
+                                        border-top-left-radius: 0;">
                                 
                                 <div style="position: absolute; 
-                                            bottom: 0; /* 箭头位于线的末端 */
-                                            left: -8px; /* 调整位置 */
+                                            bottom: -5px; /* 箭头位于线的末端 */
+                                            left: -6px;   /* 调整箭头水平位置 */
                                             width: 0; height: 0; 
-                                            border-top: 8px solid transparent; 
-                                            border-bottom: 8px solid transparent; 
-                                            border-left: 8px solid #7f8c8d;"></div> </div>
+                                            border-right: 6px solid #7f8c8d; /* 箭头形状：向左侧倾斜 */
+                                            border-top: 6px solid transparent; 
+                                            border-bottom: 6px solid transparent; 
+                                            transform: rotate(-30deg); /* 箭头旋转以匹配主线 */
+                                            transform-origin: 50% 50%;"></div> 
+                            </div>
                         </div>
                     </div>
 
