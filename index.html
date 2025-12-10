@@ -658,6 +658,68 @@
             position: relative;
             top: -4px;
         }
+        .root-wrapper{ position:relative; }
+        / 左右两段都绝对定位，方便独立控制 /
+        .root-line-left,
+        .root-line-right{
+        position:absolute;
+        bottom:-37px;          / 与原 root-line 相同 /
+        width:2px;             / 可随意调粗细 */
+        height:37px;
+        background:#2c3e50;
+        z-index:1;
+        }
+        .root-line-left{ left:50%; transform:translateX(-100%); }
+        .root-line-right{ left:50%; }
+        .task5-bridge{
+        position:absolute;
+        top:0; left:50%;
+        transform:translateX(-50%);
+        width:160px;           / 覆盖左右两个 220px 卡片的中心距 */
+        height:20px;
+        border-top:4px solid #2c3e50;
+        z-index:2;
+        }
+        .task5-bridge::before,
+        .task5-bridge::after{
+        content:'';
+        position:absolute;
+        top:-4px;
+        width:4px; height:24px;
+        background:#2c3e50;
+        }
+        .task5-bridge::before{ left:0;  }
+        .task5-bridge::after{ right:0; }
+        .t7-main-bridge{          / 已存在，只把宽度加大即可 /
+        width:420px !important; / 让左右两段分别对准 (1)(2) 中心 /
+        }
+        .t7-sub-bridge{           / (3) 下方横梁整体下移 15px /
+        top:15px !important;
+        }
+        / 从 (9) 到 New Branch 的虚斜线 /
+        .t9-to-nb{
+        position:absolute;
+        top:-135px;               / 因为 New Branch 下移了 135px /
+        left:50%;
+        width:70px;
+        height:135px;
+        background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='135'%3E%3Cpath d='M0 0 L70 135' stroke='%237f8c8d' stroke-width='3' stroke-dasharray='8,5' fill='none'/%3E%3C/svg%3E") no-repeat;
+        z-index:1;
+        }
+        / 从 (5) 右侧出发的直角实线 /
+        .t5-right-angle{
+        position:absolute;
+        top:50%; right:-50px;
+        width:50px; height:3px;
+        background:#2c3e50;
+        }
+        .t5-right-angle::after{   / 向下折 */
+        content:'';
+        position:absolute;
+        top:0; right:0;
+        width:3px; height:135px;
+        background:#2c3e50;
+        }
     </style>
 </head>
 
@@ -785,7 +847,8 @@
                     </div>
                 </div>
             </div>
-            <div class="root-line"></div>
+            <div class="root-line-left"></div>
+            <div class="root-line-right step-hidden" data-step="1" data-delay="300"></div>
         </div>
 
         <div class="branches-container">
@@ -922,7 +985,8 @@
                     </div>
                 </div>
             </div>
-            <div class="root-line"></div>
+            <div class="root-line-left"></div>
+            <div class="root-line-right step-hidden" data-step="2"></div>
         </div>
 
         <div class="node-stack step-hidden" data-step="1">
@@ -1031,7 +1095,8 @@
                     </div>
                 </div>
             </div>
-            <div class="root-line"></div>
+            <div class="root-line-left"></div>
+            <div class="root-line-right step-hidden" data-step="1"></div>
         </div>
         
         <div class="branches-container">
@@ -1126,7 +1191,8 @@
                     </div>
                 </div>
             </div>
-            <div class="root-line"></div>
+            <div class="root-line-left"></div>
+            <div class="root-line-right step-hidden" data-step="1"></div>
         </div>
         
         <div class="branches-container">
@@ -1415,7 +1481,6 @@
                     </div>
                 </div>
             </div>
-            <div class="root-line"></div>
         </div>
         
         <!-- Adjusted gap to 180px to separate the big left group from the right group -->
@@ -1439,9 +1504,7 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Split for Step 2 and 3 -->
-                <div class="step-arrow-icon step-hidden" data-step="2"><i class="fas fa-arrow-down"></i></div>
+                <div class="task5-bridge step-hidden" data-step="1"></div>
                 
                 <!-- Increased gap from 15px to 60px to prevent overlap -->
                 <div style="display: flex; gap: 60px;">
@@ -1595,7 +1658,8 @@
                     </div>
                 </div>
             </div>
-            <div class="root-line"></div>
+            <div class="root-line-left"></div>
+            <div class="root-line-right step-hidden" data-step="3" data-delay="300"></div>
         </div>
         
         <div class="branches-container">
@@ -1771,7 +1835,7 @@
         <!-- MAIN STRUCTURE: LEFT GROUP vs RIGHT GROUP -->
         <div class="branches-container">
             <!-- 1. Main Bridge connecting Left Group and Right Group -->
-            <div class="main-bridge step-hidden" data-step="1"></div>
+            <div class="t7-main-bridge step-hidden" data-step="1"></div>
 
             <!-- ========================= -->
             <!-- LEFT GROUP (Nested Tree)  -->
@@ -1810,9 +1874,16 @@
                 <!-- SUB-BRANCHES (Under Step 3) -->
                 <div class="sub-branches-row">
                     <!-- Sub Bridge connecting Left, Middle (New Branch), Right -->
-                    <div class="sub-bridge step-hidden" data-step="5">
+                    <div class="t7-sub-bridge step-hidden" data-step="5">
                     </div>
 
+                    <div class="branch-col" style="margin-top:135px;">
+                        <!-- 虚斜线 -->
+                        <div class="t9-to-nb step-hidden" data-step="9" data-delay="300"></div>
+                        <!-- 直角实线 -->
+                        <div class="t5-right-angle step-hidden" data-step="9" data-delay="300"></div>
+                        <div class="new-branch-group step-hidden" data-step="9" data-delay="300"></div>
+                    </div>
                     <!-- Sub-Col 1: Step 5 -> 8 (最左侧，位置不变) -->
                     <div class="branch-col">
                         <div class="arrow-top-gap css-arrow-down step-hidden" data-step="5"></div>
